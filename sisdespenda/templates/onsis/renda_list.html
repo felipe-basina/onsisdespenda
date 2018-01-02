@@ -1,0 +1,209 @@
+{% extends 'onsis/base.html' %}
+{% load humanize %}
+{% load ordenacao_data %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Renda <small> </small>
+        </h1>
+        <ol class="breadcrumb">
+        	<li>Formul&aacute;rios</li>
+            <li class="active">
+                <i class="fa fa-money fa-fw"></i> Renda
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<i class="fa fa-info-circle fa-fw"></i> Renda
+				</h3>
+			</div>
+			<div class="panel-body">
+				<p>Defina aqui suas rendas!</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3"></div>
+	<div class="col-sm-6">
+		{% if template.mensagem %}
+			<div class="alert alert-{{ template.status }} alert-dismissable fade in" style="display: block;">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+				<strong>{{ template.mensagem }}</strong>
+			</div>
+		{% endif %}
+	</div>
+	<div class="col-sm-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+
+<div id="wait" style="display: block;">
+	<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+	<span>Carregando...</span>
+</div>
+
+<div id="show_content" style="display: none;">
+		<div class="panel panel-default">
+		
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Formul&aacute;rio de renda 
+				</h3>
+			</div>
+                        
+			<!-- Formulário -->
+			<div class="panel-body">
+				<div class="col-md-8">
+                   {% if cd_reg <= 0 %}
+                        <form id="rendaForm" method="POST" class="post-form" action="/renda/novo/">{% csrf_token %}
+                            <div class="form-group control-group">
+                                {{ template.form.as_p }}
+                            </div>
+                            <div>
+                                <center>
+                                    <button type="submit" class="btn btn-primary">salvar</button>
+                                    <button type="button" class="btn btn-default limpar">limpar</button>
+                                </center>
+                            </div>
+                        </form>
+                   {% else %}
+                      <form id="rendaAtualizacaoForm" method="POST" 
+                        class="post-form" action="/renda/novo/{{ cd_reg }}">
+                         {% csrf_token %}
+                         <div class="form-group control-group">
+                            {{ template.form.as_p }}
+                         </div>
+                         <div>
+                            <center>
+                               <button type="submit" class="btn btn-primary">salvar</button>
+                               <button type="button" class="btn btn-default limpar">limpar</button>
+                            </center>
+                         </div>
+                      </form>
+                     {% endif %}
+				</div>				
+			</div>
+			
+            <div class="panel-body">
+                <div class="col-md-4 selecao-ano">
+                    <label for="ano_renda">Selecione o ano para visualizar as rendas</label>
+                </div>
+                <div class="col-md-2">
+                    <select name="ano_renda" class="form-control"
+                        onchange="javascript:recuperarRegistroPorAno('/renda/lista/ano/', this.value);">
+                        {% for ano in template.anos %}
+                            <!-- Forçando a comparação entre valores inteiros -->
+                            {% if template.ano_atual|add:0 == ano|add:0 %}
+                                <option value="{{ano}}" selected>{{ano}}</option>
+                            {% else %}
+                                <option value="{{ano}}">{{ano}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+			
+            {% if template.rendas %}        
+				<div class="panel-body">
+					<div class="col-md-2 alinhamento-texto-quebra">
+						<label for="total_renda_mes_label" class="cont-renda-label">
+							Total de renda m&ecirc;s
+						</label>
+						<label for="total_renda_mes" class="cont-renda">
+							{{ template.total_mes.vl_renda__sum|intcomma }}
+						</label>
+					</div>
+					<div class="col-md-2 alinhamento-texto-quebra">
+						<label for="total_renda_ano_label" class="cont-renda-label">
+							Total de renda ano
+						</label>
+						<label for="total_renda_ano" class="cont-renda">
+							{{ template.total_ano.vl_renda__sum|intcomma }}
+						</label>
+					</div>
+				</div>
+			{% endif %}
+			
+			<!-- Grid -->
+			<div class="panel-body">
+
+					<div class="col-md-12">
+						<div id="renda_div" class="form-group table-responsive">
+													
+							<table id="renda-tbl" class="table-striped" width="100%">
+								<thead>
+									<tr>
+										<th>descri&ccedil;&atilde;o</th>
+										<th>valor</th>
+										<th>data da renda</th>
+										<th>data de cria&ccedil;&atilde;o</th>
+										<th>data de atualiza&ccedil;&atilde;o</th>
+										<th>editar</th>
+										<th>remover</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for renda in template.rendas|order_by:'-dt_renda' %}
+										<tr class="alinhamento-texto">
+											<td class="alinhamento-texto-esquerdo">{{ renda.cd_tipo_renda }}</td>
+											<td>
+                                                {{ renda.vl_renda|intcomma }}
+											</td>
+											<td>
+                                                {{ renda.dt_renda|date:'d/m/Y' }}
+											</td>
+											<td>
+												{{ renda.dt_criacao|date:'d/m/Y H:i' }}
+											</td>
+											<td>
+												{{ renda.dt_atualizacao|date:'d/m/Y H:i' }}
+											</td>
+                                           <td>
+                                              <a style="cursor: pointer;"
+                                                onclick="javascript:confirmarOperacao('/renda/editar/{{ renda.cd_registro }}', 'primary', 'Deseja realmente editar o registro?');"
+                                                title='Editar renda'>
+                                                <i class="fa fa-pencil-square-o fa-fw"></i>
+                                              </a>
+                                           </td>
+											<td>
+												<a style="cursor: pointer;"
+													onclick="javascript:confirmarOperacao('/renda/remove/{{ renda.cd_registro }}', 'danger', 'Deseja realmente remover o registro?');"
+													title='Remover renda'>
+													<i class="fa fa-trash-o fa-fw"></i>
+												</a>
+											</td>
+										</tr>
+									{% endfor %}																		
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
+						
+						</div>
+					</div>
+			
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+{% endblock %}

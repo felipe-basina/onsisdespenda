@@ -1,0 +1,88 @@
+{% extends 'onsis/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+   <div class="col-lg-12">
+      <h1 class="page-header">
+         Altera&ccedil;&atilde;o de senha <small> </small>
+      </h1>
+      <ol class="breadcrumb">
+         <li>Menu</li>
+         <li class="active">
+            <i class="fa fa-lock fa-fw"></i> Alterar senha
+         </li>
+      </ol>
+   </div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h3 class="panel-title">
+               <i class="fa fa-info-circle fa-fw"></i> Altera&ccedil;&atilde;o de senha
+            </h3>
+         </div>
+         <div class="panel-body">
+            <p>Altere sua senha!</p>
+            <p><strong>Ao alterar a senha voc&ecirc; ser&aacute; deslogado do sistema.</strong></p>
+            <p>N&atildeo se preocupe, apenas entre novamente usando a sua nova senha <i class="fa fa-smile-o" aria-hidden="true"></i></p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-3"></div>
+   <div class="col-sm-6">
+      {% if mensagem %}
+      <div class="alert alert-{{ status }} alert-dismissable fade in" style="display: block;">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+         <strong>{{ mensagem }}</strong>
+      </div>
+      {% endif %}
+   </div>
+   <div class="col-sm-3"></div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <div id="wait" style="display: block;">
+         <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+         <span>Carregando...</span>
+      </div>
+      <div id="show_content" style="display: none;">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">
+                  Formul&aacute;rio para altera&ccedil;&atilde;o de senha
+               </h3>
+            </div>
+            <!-- Formulário -->
+            <div class="panel-body">
+               <div class="col-md-8">
+                  <form id="alterSenhaForm" method="POST" class="post-form" action="/altera/senha/">
+                     {% csrf_token %}
+                     <div class="form-group control-group">
+                        <p>
+                            <label for="senha">Nova senha:</label>
+                            <input class="form-control" id="senha" maxlength="20" name="senha" type="password">
+                        </p>
+                     </div>   
+                     <div class="form-group control-group">
+                        <p>
+                            <label for="nova_senha">Digite novamente a nova senha:</label>
+                            <input class="form-control" id="nova_senha" maxlength="20" name="nova_senha" type="password">
+                        </p>
+                     </div>
+                     <div>
+                        <center>
+                           <button type="submit" class="btn btn-primary">salvar</button>
+                           <button type="button" class="btn btn-default limpar">limpar</button>
+                        </center>
+                     </div>
+                  </form>
+               </div>
+            </div> 
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

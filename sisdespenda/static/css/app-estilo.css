@@ -1,0 +1,284 @@
+body #page-wrapper {
+	font-size: 85%;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+a.navbar-inverse {
+    background-color: #87CEEB !important;
+    border-color: #080808;
+}
+
+a.side-nav {
+	background-color: #87CEEB !important;
+}
+
+a.navbar-inverse .navbar-nav>li>a {
+	color: #000080 !important;
+}
+
+#page-wrapper, body {
+	background-color: #F5FFFA !important;
+}
+
+.side-nav>li>ul>li>a {
+    display: block;
+    padding: 10px 15px 10px 38px;
+    text-decoration: none;
+    color: #999;
+}
+
+.side-nav>li>ul>li>ul>li>a
+{
+    display: block;
+    padding: 10px 15px 10px 10px;
+    text-decoration: none;
+    color: #999;
+}
+
+.side-nav>li>ul>li>ul>li>ul>li>a
+{
+    display: block;
+    padding: 7px 11px 7px 7px;
+    text-decoration: none;
+    color: #999;
+}
+
+.esconde_li_bullet>li {
+	list-style:none;
+}
+
+.validacao_autenticacao {
+	text-align: center;
+	color: #b94a48;
+	background-color: #f2dede;
+	border-color: #eed3d7;
+	width: 190px;
+	padding-left: 10px;
+	padding-right: 180px;
+	white-space: nowrap;
+}
+
+.imgRecarrega {
+	opacity: 0.3;
+	filter: alpha(opacity=30); /* Para IE >= 8 */
+	vertical-align: top;
+	width: 15px;
+	height: 15px;
+	cursor: pointer;
+}
+
+/**************************** data tables ***/
+
+tr th {
+	text-align: center;
+}
+
+.jspPane > table {
+	width: 100%;
+}
+
+#tipo-renda {
+	widthi: 500px;
+	height: 200px;
+}
+
+#tipo-despesa {
+	widthi: 500px;
+	height: 200px;
+}
+
+#renda-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#despesa-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#despesa-futura-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#despesa-real-mes-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#despesa-fut-mes-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#despesa-real-ano-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#despesa-fut-ano-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#renda-mes-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#renda-ano-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#relacao-mes-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#saldo-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#relacao-ano-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+#evento-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
+spani {
+	border: 1px red solid;
+	color: red;
+	padding: 40px;
+}
+
+#evento-tbl_length select,
+#relacao-ano-tbl_length select,
+#saldo-tbl_length select,
+#renda-ano-tbl_length select,
+#despesa-real-ano-tbl_length select,
+#despesa-fut-ano-tbl_length select,
+#relacao-mes-tbl_length select,
+#renda-mes-tbl_length select,
+#despesa-real-mes-tbl_length select,
+#despesa-fut-mes-tbl_length select,
+#despesa-tbl_length select, 
+#despesa-futura-tbl_length select, 
+#renda-tbl_length select, 
+#tipo-renda_length select,
+#tipo-despesa_length select,
+.dataTables_wrapper .dataTables_filter input {
+	margin-left: 1.2em;
+	border-radius: 15px;
+}
+
+.alinhamento-texto-esquerdo {
+	text-align: left;
+}
+
+.alinhamento-texto {
+	text-align: center;
+	white-space: nowrap;
+}
+
+.alinhamento-texto-quebra {
+	text-align: center;
+}
+
+.selecao-ano {
+	white-space: nowrap;
+    padding-top: 9px;
+    color: #3392b7;
+}
+
+table.dataTable tbody tr {
+	background-color: #E6FFE6;
+}
+
+th {
+    white-space: nowrap;
+}
+
+input:focus {
+    outline: none;
+}
+
+.control-group.error input, 
+.control-group.error select,
+.control-group.error textarea {
+	border-color: red;
+}
+
+.control-group.success input, 
+.control-group.success select, 
+.control-group.success textarea {
+	border-color: green;
+}
+
+.error label {
+	color: red;
+}
+/**************************** data tables ***/
+
+.alert-error, .validation {
+	text-align: center;
+	color: #b94a48;
+	background-color: #f2dede;
+	border-color: #eed3d7;
+}
+
+.validation {
+	text-align: center;
+	color: #b94a48;
+	background-color: #f2dede;
+	border-color: #eed3d7;
+	width: 190px;
+	padding-left: 10px;
+	padding-right: 121px;
+	white-space: nowrap;
+}
+
+.help-inline {
+	display: inline-block;
+	*display: inline;
+	padding-left: 5px;
+	vertical-align: middle;
+	*zoom: 1;
+}
+
+/*************************** Contabilização ***/
+.cont-despesa {
+    font-size: 20px;
+    color: #d9534f;
+    border-radius: 18px;
+    border: 1px solid #d9534f;
+    padding: 10px;
+}
+
+.cont-despesa-label {
+	color: #d9534f;
+}
+
+.cont-renda {
+    font-size: 20px;
+    color: #5cb85c;
+    border-radius: 18px;
+    border: 1px solid #5cb85c;
+    padding: 10px;
+}
+
+.cont-renda-label {
+	color: #5cb85c;
+}
+/*************************** Contabilização ***/
+
+.borda_redonda_login {
+	margin-left: 35px;
+	border-radius: 20px;
+}

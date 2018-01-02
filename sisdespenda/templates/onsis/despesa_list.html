@@ -1,0 +1,324 @@
+{% extends 'onsis/base.html' %}
+{% load humanize %}
+{% load ordenacao_data %}
+{% block content %}
+<div class="row">
+   <div class="col-lg-12">
+      <h1 class="page-header">
+         Despesa <small> </small>
+      </h1>
+      <ol class="breadcrumb">
+         <li>Formul&aacute;rios</li>
+         <li class="active">
+            <i class="fa fa-credit-card fa-fw"></i> Despesa
+         </li>
+      </ol>
+   </div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h3 class="panel-title">
+               <i class="fa fa-info-circle fa-fw"></i> Despesa
+            </h3>
+         </div>
+         <div class="panel-body">
+            <p>Defina suas despesas!</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-3"></div>
+   <div class="col-sm-6">
+      {% if template.mensagem %}
+      <div class="alert alert-{{ template.status }} alert-dismissable fade in" style="display: block;">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+         <strong>{{ template.mensagem }}</strong>
+      </div>
+      {% endif %}
+   </div>
+   <div class="col-sm-3"></div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <div id="wait" style="display: block;">
+         <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+         <span>Carregando...</span>
+      </div>
+      <div id="show_content" style="display: none;">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">
+                  Formul&aacute;rio de despesa
+               </h3>
+            </div>
+            <!-- Formulário -->
+            <div class="panel-body">
+               <div class="col-md-8">
+                   {% if cd_reg <= 0 %}
+                      <form id="despesaForm" method="POST" class="post-form" action="/despesa/novo/">
+                         {% csrf_token %}
+                         <div class="form-group control-group">
+                            {{ template.form.as_p }}
+                         </div>
+                         <div>
+                            <center>
+                               <button type="submit" class="btn btn-primary">salvar</button>
+                               <button type="button" class="btn btn-default limpar">limpar</button>
+                            </center>
+                         </div>
+                      </form>
+                   {% else %}
+                      <form id="despesaAtualizacaoForm" method="POST" 
+                        class="post-form" action="/despesa/novo/{{ cd_reg }}">
+                         {% csrf_token %}
+                         <div class="form-group control-group">
+                            {{ template.form.as_p }}
+                         </div>
+                         <div>
+                            <center>
+                               <button type="submit" class="btn btn-primary">salvar</button>
+                               <button type="button" class="btn btn-default limpar">limpar</button>
+                            </center>
+                         </div>
+                      </form>
+                     {% endif %}
+               </div>
+            </div>
+            <div class="panel-body">
+               <div class="col-md-4 selecao-ano">
+                  <label for="ano_despesa">Selecione o ano para visualizar as despesas</label>
+               </div>
+               <div class="col-md-2">
+                  <select name="ano_despesa" class="form-control"
+                     onchange="javascript:recuperarRegistroPorAno('/despesa/lista/ano/', this.value);">
+                     {% for ano in template.anos %}
+                     <!-- Forçando a comparação entre valores inteiros -->
+                     {% if template.ano_atual|add:0 == ano|add:0 %}
+                     <option value="{{ano}}" selected>{{ano}}</option>
+                     {% else %}
+                     <option value="{{ano}}">{{ano}}</option>
+                     {% endif %}
+                     {% endfor %}
+                  </select>
+               </div>
+            </div>
+            {% if template.despesas or template.total_futura_ano %}
+            <div class="panel-body">
+               <div class="col-md-2 alinhamento-texto-quebra">
+                  <label for="total_despesa_mes_label" class="cont-despesa-label">
+                  Total de despesa m&ecirc;s
+                  </label>
+                  <label for="total_despesa_mes" class="cont-despesa">
+                  {{ template.total_mes.vl_despesa__sum|intcomma }}
+                  </label>
+               </div>
+               <div class="col-md-2 alinhamento-texto-quebra">
+                  <label for="total_despesa_futura_label" class="cont-despesa-label">
+                  Total de despesa futura
+                  </label>
+                  <label for="total_despesa_futura" class="cont-despesa">
+                  {{ template.total_futura_ano.vl_despesa__sum|intcomma }}
+                  </label>
+               </div>
+               <div class="col-md-2 alinhamento-texto-quebra">
+                  <label for="total_despesa_ano_label" class="cont-despesa-label">
+                  Total de despesa ano
+                  </label>
+                  <label for="total_despesa_ano" class="cont-despesa">
+                  {{ template.total_ano.vl_despesa__sum|intcomma }}
+                  </label>
+               </div>
+            </div>
+            {% endif %}
+            <div class="panel-body">
+               <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" class="active">
+                     <a aria-controls="desp-realizada" role="tab" data-toggle="tab" href="#desp-realizada">
+                     Despesas realizadas
+                     </a>
+                  </li>
+                  <li role="presentation">
+                     <a aria-controls="desp-futura" role="tab" data-toggle="tab" href="#desp-futura">
+                     Despesas futuras
+                     </a>
+                  </li>
+               </ul>
+               <div class="tab-content">
+                  <div id="desp-realizada" class="tab-pane panel panel-default fade in active">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">
+                           Despesas realizadas
+                        </h3>
+                     </div>
+                     <!-- Grid -->
+                     <div class="panel-body">
+                        <div class="col-md-12">
+                           <div id="despesa_div" class="form-group table-responsive">
+                              <table id="despesa-tbl" class="table-striped" width="100%">
+                                 <thead>
+                                    <tr>
+                                       <th>tipo de despesa</th>
+                                       <th>descri&ccedil;&atilde;o</th>
+                                       <th>valor</th>
+                                       <th>data da despesa</th>
+                                       <th>data de cria&ccedil;&atilde;o</th>
+                                       <th>data de atualiza&ccedil;&atilde;o</th>
+                                       <th>editar</th>
+                                       <th>remover</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    {% if template.despesas  %}
+                                        {% for despesa in template.despesas|order_by:'-dt_despesa' %}
+                                        <tr class="alinhamento-texto">
+                                           <td class="alinhamento-texto-esquerdo">{{ despesa.cd_tipo_despesa }}</td>
+                                           <td class="alinhamento-texto-esquerdo">{{ despesa.ds_despesa }}</td>
+                                           <td>
+                                              {{ despesa.vl_despesa|intcomma }}
+                                           </td>
+                                           <td>
+                                              {{ despesa.dt_despesa|date:'d/m/Y' }}
+                                           </td>
+                                           <td>
+                                              {{ despesa.dt_criacao|date:'d/m/Y H:i' }}
+                                           </td>
+                                           <td>
+                                              {{ despesa.dt_atualizacao|date:'d/m/Y H:i' }}
+                                           </td>
+                                           <td>
+                                              <a style="cursor: pointer;"
+                                                onclick="javascript:confirmarOperacao('/despesa/editar/{{ despesa.cd_registro }}', 'primary', 'Deseja realmente editar o registro?');"
+                                                title='Editar despesa'>
+                                                <i class="fa fa-pencil-square-o fa-fw"></i>
+                                              </a>
+                                           </td>
+                                           <td>
+                                              <a style="cursor: pointer;"
+                                                 onclick="javascript:confirmarOperacao('/despesa/remove/{{ despesa.cd_registro }}', 'danger', 'Deseja realmente remover o registro?');"
+                                                 title='Remover despesa'>
+                                              <i class="fa fa-trash-o fa-fw"></i>
+                                              </a>
+                                           </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                 </tbody>
+                                 <tfoot>
+                                    <tr>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                    </tr>
+                                 </tfoot>
+                              </table>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Despesa realizada -->
+                  <div id="desp-futura" class="tab-pane panel panel-default fade">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">
+                           Despesas futuras
+                        </h3>
+                     </div>
+                     <!-- Grid -->
+                     <div class="panel-body">
+                        <div class="col-md-12">
+                           <div id="despesa_futura_div" class="form-group table-responsive">
+                              <table id="despesa-futura-tbl" class="table-striped" width="100%">
+                                 <thead>
+                                    <tr>
+                                       <th>tipo de despesa</th>
+                                       <th>descri&ccedil;&atilde;o</th>
+                                       <th>valor</th>
+                                       <th>data da despesa</th>
+                                       <th>data de cria&ccedil;&atilde;o</th>
+                                       <th>data de atualiza&ccedil;&atilde;o</th>
+                                       <th>editar</th>
+                                       <th>remover</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    {% for despesa in template.despesas_futura|order_by:'-dt_despesa' %}
+                                    <tr class="alinhamento-texto">
+                                       <td class="alinhamento-texto-esquerdo">{{ despesa.cd_tipo_despesa }}</td>
+                                       <td class="alinhamento-texto-esquerdo">{{ despesa.ds_despesa }}</td>
+                                       <td>
+                                          {{ despesa.vl_despesa|intcomma }}
+                                       </td>
+                                       <td>
+                                          {{ despesa.dt_despesa|date:'d/m/Y' }}
+                                       </td>
+                                       <td>
+                                          {{ despesa.dt_criacao|date:'d/m/Y H:i' }}
+                                       </td>
+                                       <td>
+                                          {{ despesa.dt_atualizacao|date:'d/m/Y H:i' }}
+                                       </td>
+                                       <td>
+                                          <a style="cursor: pointer;"
+                                          	onclick="javascript:confirmarOperacao('/despesa/editar/{{ despesa.cd_registro }}', 'primary', 'Deseja realmente editar o registro?');"
+                                          	title='Editar despesa'>
+                                          	<i class="fa fa-pencil-square-o fa-fw"></i>
+                                          </a>
+                                       </td>
+                                       <td>
+                                          <a style="cursor: pointer;"
+                                             onclick="javascript:confirmarOperacao('/despesa/remove/{{ despesa.cd_registro }}', 'danger', 'Deseja realmente remover o registro?');"
+                                             title='Remover despesa'>
+                                          <i class="fa fa-trash-o fa-fw"></i>
+                                          </a>
+                                       </td>
+                                    </tr>
+                                    {% endfor %}
+                                 </tbody>
+                                 <tfoot>
+                                    <tr>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                       <th></th>
+                                    </tr>
+                                 </tfoot>
+                              </table>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Despesa futura -->
+               </div>
+               <!-- class="tab-content" -->
+            </div>
+            <!-- class="col-lg-12" -->     
+         </div>
+      </div>
+   </div>
+</div>
+{% if template.futura == True %}
+<script>
+   $(function() {
+       $('.nav-tabs a[href="#desp-futura"]').tab('show');
+   });
+</script>
+{% endif %}
+{% if template.futura == False %}
+<script>
+   $(function() {
+       $('.nav-tabs a[href="#desp-realizada"]').tab('show');
+   });
+</script>
+{% endif %}
+{% endblock %}

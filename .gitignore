@@ -1,0 +1,9 @@
+*.pyc
+*~
+__pycache__
+ambvirt
+/static
+.DS_Store
+settings-desenvolvimento.py
+settings-producao.py
+settings-padrao.py

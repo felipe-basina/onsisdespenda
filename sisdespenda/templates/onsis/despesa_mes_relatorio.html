@@ -1,0 +1,170 @@
+{% extends 'onsis/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+   <div class="col-lg-12">
+      <h1 class="page-header">
+         Relat&oacute;rio de despesas <small> </small>
+      </h1>
+      <ol class="breadcrumb">
+         <li>Relat&oacute;rios</li>
+         <li>M&ecirc;s</li>
+         <li class="active">
+            <i class="fa fa-credit-card fa-fw"></i> Despesa
+         </li>
+      </ol>
+   </div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h3 class="panel-title">
+               <i class="fa fa-info-circle fa-fw"></i> Relat&oacute;rio de despesa 
+            </h3>
+         </div>
+         <div class="panel-body">
+            <p>Relat&oacute;rios de despesas realizadas e futuras</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-3"></div>
+   <div class="col-sm-6">
+      {% if template.mensagem %}
+      <div class="alert alert-{{ template.status }} alert-dismissable fade in" style="display: block;">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+         <strong>{{ template.mensagem }}</strong>
+      </div>
+      {% endif %}
+   </div>
+   <div class="col-sm-3"></div>
+</div>
+<div class="row">
+   <div id="wait" style="display: block;">
+      <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+      <span>Carregando...</span>
+   </div>
+   <div id="show_content" style="display: none;">
+      <div class="panel-body">
+         <div class="col-md-4 selecao-ano">
+            <label for="ano_despesa">Selecione o ano para visualizar as despesas</label>
+         </div>
+         <div class="col-md-2">
+            <select name="ano_despesa" class="form-control"
+               onchange="javascript:recuperarRegistroPorAno('/despesa/relatorio/mes/ano/', this.value);">
+               {% for ano in template.anos %}
+               <!-- Forçando a comparação entre valores inteiros -->
+               {% if template.ano_atual|add:0 == ano|add:0 %}
+               <option value="{{ano}}" selected>{{ano}}</option>
+               {% else %}
+               <option value="{{ano}}">{{ano}}</option>
+               {% endif %}
+               {% endfor %}
+            </select>
+         </div>
+      </div>
+      <div class="panel-body">
+         <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+               <a aria-controls="desp-realizada" role="tab" data-toggle="tab" href="#desp-realizada">
+               Relat&oacute;rio de despesas realizadas
+               </a>
+            </li>
+            <li role="presentation">
+               <a aria-controls="desp-futura" role="tab" data-toggle="tab" href="#desp-futura">
+               Relat&oacute;rio de despesas futuras
+               </a>
+            </li>
+         </ul>
+         <div class="tab-content">
+            <div id="desp-realizada" class="tab-pane panel panel-default fade in active">
+               <div class="panel-heading">
+                  <h3 class="panel-title">
+                     Relat&oacute;rio de despesas realizadas
+                  </h3>
+               </div>
+               <!-- Grid -->
+               <div class="panel-body">
+                  <div class="col-md-12">
+                     <div id="despesa_real_mes_div" class="form-group table-responsive">
+                        <table id="despesa-real-mes-tbl" class="table-striped" width="100%">
+                           <thead>
+                              <tr>
+                                 <th>
+                                    m&ecirc;s/ano
+                                 </th>
+                                 <th>
+                                    valor
+                                 </th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for periodo, valor in template.realizada %}
+                              <tr class="alinhamento-texto">
+                                 <td>{{ periodo }}</td>
+                                 <td>{{ valor|intcomma }}</td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                           <tfoot>
+                              <tr>
+                                 <th></th>
+                                 <th></th>
+                              </tr>
+                           </tfoot>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- desp-realizada -->
+            <div id="desp-futura" class="tab-pane panel panel-default fade">
+               <div class="panel-heading">
+                  <h3 class="panel-title">
+                     Relat&oacute;rio de despesas futuras
+                  </h3>
+               </div>
+               <!-- Grid -->
+               <div class="panel-body">
+                  <div class="col-md-12">
+                     <div id="despesa_fut_mes_div" class="form-group table-responsive">
+                        <table id="despesa-fut-mes-tbl" class="table-striped" width="100%">
+                           <thead>
+                              <tr>
+                                 <th>
+                                    m&ecirc;s/ano
+                                 </th>
+                                 <th>
+                                    valor
+                                 </th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for periodo, valor in template.futura %}
+                              <tr class="alinhamento-texto">
+                                 <td>{{ periodo }}</td>
+                                 <td>{{ valor|intcomma }}</td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                           <tfoot>
+                              <tr>
+                                 <th></th>
+                                 <th></th>
+                              </tr>
+                           </tfoot>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- desp-futura -->
+         </div>
+         <!-- tab-content -->
+      </div>
+   </div>
+</div>
+<!-- row -->
+{% endblock %}

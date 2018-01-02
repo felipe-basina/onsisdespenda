@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="BR_PT">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta charset="ISO-8859-1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>online sisdespenda</title>
+
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+	<link href="{% static 'css/app-estilo.css' %}" rel="stylesheet">
+	
+    <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/plugins/morris.css' %}" rel="stylesheet">
+    
+    <link href="{% static 'css/bootstrap-dialog.min.css' %}" rel="stylesheet">
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"/>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css"/>
+    
+    <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+	
+	<link href="{% static 'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js"></script>
+    <script src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/Chart.bundle.js' %}"></script>
+    
+</head>
+
+<body>
+
+<div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"> 
+                		<i class="fa fa-wifi fa-fw" aria-hidden="true"></i> online sisdespenda
+				</a>
+            </div>
+            <!-- Top Menu Items -->
+			
+            <ul class="nav navbar-right top-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ request.user.username }} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/nova/senha"><i class="fa fa-lock fa-fw"></i> alterar senha </a>
+                        </li>
+                        <li class="divider"></li>
+                        <!--
+                        <li>
+                            <a href="#"><i class="fa fa-file-text-o fa-fw"></i> histórico </a>
+                        </li>
+                    	<li class="divider"></li>
+                        -->
+                        <li>
+                            <a href="/logout"><i class="fa fa-fw fa-power-off"></i> sair </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-list-alt fa-fw"></i> Formul&aacute;rio <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="demo" class="collapse">
+                            <li>
+                                <a href="/despesa/lista"><i class="fa fa-credit-card fa-fw"></i> despesas </a>
+                            </li>							
+                            <li>
+                                <a href="/renda/lista"><i class="fa fa-money fa-fw"></i> rendas </a>
+                            </li>
+							<li>
+                                <a href="/tipo/despesa/lista"><i class="fa fa-pencil-square fa-fw"></i> tipo despesa </a>
+                            </li>
+							<li>
+                                <a href="/tipo/lista"><i class="fa fa-pencil-square-o fa-fw"></i> tipo renda </a>
+                            </li>							
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demoo"><i class="fa fa-book fa-fw"></i> Relat&oacute;rios <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="demoo" class="collapse">
+                            <li>
+                                <a href="javascript:;" data-toggle="collapse" data-target="#demoo1"><i class="fa fa-table fa-fw"></i> por m&ecirc;s <i class="fa fa-fw fa-caret-down"></i></a>
+								<ul id="demoo1" class="collapse esconde_li_bullet">
+									<li>
+										<a href="/despesa/relatorio/mes/ano"><i class="fa fa-credit-card fa-fw"></i> <small> despesa </small></a>
+									</li>							
+									<li>
+										<a href="/renda/relatorio/mes/ano"><i class="fa fa-money fa-fw"></i> <small> renda </small></a>
+									</li>
+									<li>
+										<a href="/relacao/relatorio/mes/ano"><i class="fa fa-money"></i> x <i class="fa fa-credit-card"></i> <small> renda x despesa</small></a>
+									</li>
+                                    <li>
+                                        <a href="javascript:;" data-toggle="collapse" data-target="#demoo1_1"><i class="fa fa-pie-chart fa-fw"></i> gr&aacute;ficos <i class="fa fa-fw fa-caret-down"></i></a>
+                                        <ul id="demoo1_1" class="collapse esconde_li_bullet">
+                                            <li>
+                                                <a href="/despesa/grafico/mes/ano"><i class="fa fa-credit-card fa-fw"></i> <small> despesa</small></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+								</ul>					
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-toggle="collapse" data-target="#demoo2"><i class="fa fa-table fa-fw"></i> por ano <i class="fa fa-fw fa-caret-down"></i></a>
+								<ul id="demoo2" class="collapse esconde_li_bullet">
+									<li>
+										<a href="/despesa/relatorio/ano"><i class="fa fa-credit-card fa-fw"></i> <small> despesa </small></a>
+									</li>							
+									<li>
+										<a href="/renda/relatorio/ano"><i class="fa fa-money fa-fw"></i> <small> renda </small></a>
+									</li>
+									<li>
+										<a href="/relacao/relatorio/ano"><i class="fa fa-money"></i> x <i class="fa fa-credit-card"></i> <small> renda x despesa</small></a>
+									</li>
+                                    <li>
+                                        <a href="javascript:;" data-toggle="collapse" data-target="#demoo2_2"><i class="fa fa-pie-chart fa-fw"></i> gr&aacute;ficos <i class="fa fa-fw fa-caret-down"></i></a>
+                                        <ul id="demoo2_2" class="collapse esconde_li_bullet">
+                                            <li>
+                                                <a href="/despesa/grafico/ano"><i class="fa fa-credit-card fa-fw"></i> <small> despesa</small></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+								</ul>
+							</li>
+                            <li>
+                                <a href="/saldo/lista"><i class="fa fa-usd fa-fw"></i> saldo </a>
+							</li>
+                        </ul>
+                    </li>				
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+				{% block content %}
+				{% endblock %}
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+
+	<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+    
+	<script type="text/javascript" src="{% static 'js/bootstrap-dialog.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/app-script.js' %}"></script>
+
+</body>
+</html>

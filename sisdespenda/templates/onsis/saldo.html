@@ -1,0 +1,107 @@
+{% extends 'onsis/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Relat&oacute;rio saldo <small> </small>
+        </h1>
+        <ol class="breadcrumb">
+        	<li>Relat&oacute;rios</li>
+            <li class="active">
+                <i class="fa fa-usd fa-fw"></i> Saldo
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<i class="fa fa-info-circle fa-fw"></i> Relat&oacute;rio saldo atual
+				</h3>
+			</div>
+			<div class="panel-body">
+				<p>Saldo atual</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3"></div>
+	<div class="col-sm-6">
+		{% if template.mensagem %}
+			<div class="alert alert-{{ template.status }} alert-dismissable fade in" style="display: block;">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+				<strong>{{ template.mensagem }}</strong>
+			</div>
+		{% endif %}
+	</div>
+	<div class="col-sm-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+
+<div id="wait" style="display: block;">
+	<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+	<span>Carregando...</span>
+</div>
+
+<div id="show_content" style="display: none;">
+
+		<div class="panel panel-default">
+		
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Saldo atualizado
+				</h3>
+			</div>
+			
+			<!-- Grid -->
+			<div class="panel-body">
+
+					<div class="col-md-12">
+						<div id="saldo_div" class="form-group table-responsive">
+													
+							<table id="saldo-tbl" class="table-striped" width="100%">
+								<thead>
+									<tr>
+										<th>m&ecirc;s/ano</th>
+										<th>total renda</th>
+										<th>despesa futura m&ecirc;s</th>
+										<th>saldo</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {% for valor_saldo in template %}
+                                    <tr class="alinhamento-texto">
+                                         <td>{{ valor_saldo.periodo }}</td>
+                                         <td>{{ valor_saldo.total_renda|intcomma }}</td>
+                                         <td>{{ valor_saldo.total_despesa|intcomma }}</td>
+                                         <td>{{ valor_saldo.saldo|intcomma }}</td>
+                                    </tr>
+                                    {% endfor %}
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
+						
+						</div>						
+					</div>
+			
+			</div>
+		</div>
+	</div>	
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'onsis/base.html' %}
+
+{% block content %}
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-header">
+			<i class="fa fa-wifi fa-fw" aria-hidden="true"></i>
+			online sisdespenda
+			<small> </small>
+		</h1>
+		<ol class="breadcrumb">
+			<li class="active">
+				<i class="fa fa-smile-o fw" aria-hidden="true"></i>
+				Vamos começar?
+			</li>
+		</ol>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3"></div>
+	<div class="col-sm-6">
+		{% if mensagem %}
+			<div class="alert alert-{{ status }} alert-dismissable fade in" style="display: block;">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+				<strong>{{ mensagem }}</strong>
+			</div>
+		{% endif %}
+	</div>
+	<div class="col-sm-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+
+		<div id="wait" style="display: block;">
+			<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span>
+			Carregando...</span>
+		</div>
+
+		<div id="show_content" style="display: none;">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						<i class="fa fa-info-circle fa-fw"></i>
+						Notas
+					</h3>
+				</div>
+				<div class="panel-body">
+					<p>
+						Aqui você conseguirá definir suas despesas e rendas para melhor controlá-las.
+					</p>
+					<p>
+						Não deixe para depois e não perca mais o seu precioso
+						<i class="fa fa-usd fa-fw"></i>
+					</p>
+					<p>
+						Gaste com consciência
+						<i class="fa fa-thumbs-o-up fa-fw"></i>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

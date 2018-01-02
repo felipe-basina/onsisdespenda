@@ -1,0 +1,347 @@
+{% extends 'onsis/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+   <div class="col-lg-12">
+      <h1 class="page-header">
+         <i class="fa fa-wifi fa-fw" aria-hidden="true"></i>
+         online sisdespenda
+         <small> </small>
+      </h1>
+      <ol class="breadcrumb">
+         <li>Relat&oacute;rios</li>
+         <li>M&ecirc;s</li>
+         <li>Gr&aacute;ficos</li>
+         <li class="active">
+            <i class="fa fa-credit-card fa-fw"></i> Despesa
+         </li>
+      </ol>
+   </div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h3 class="panel-title">
+               <i class="fa fa-info-circle fa-fw"></i> Despesa
+            </h3>
+         </div>
+         <div class="panel-body">
+            <p>Visualize a divis&atilde;o de suas despesas!</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-3"></div>
+   <div class="col-sm-6">
+      {% if mensagem %}
+      <div class="alert alert-{{ status }} alert-dismissable fade in" style="display: block;">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+         <strong>{{ mensagem }}</strong>
+      </div>
+      {% endif %}
+   </div>
+   <div class="col-sm-3"></div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <div id="wait" style="display: block;">
+         <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> <span>
+         Carregando...</span>
+      </div>
+      <div id="show_content" style="display: none;">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">
+                  Gr&aacute;fico de despesas
+               </h3>
+            </div>
+            <div class="panel-body">
+               <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" class="active">
+                     <a aria-controls="desp-realizada" role="tab" data-toggle="tab" href="#desp-realizada">
+                     Despesas realizadas
+                     </a>
+                  </li>
+                  <li role="presentation">
+                     <a aria-controls="desp-futura" role="tab" data-toggle="tab" href="#desp-futura">
+                     Despesas futuras
+                     </a>
+                  </li>
+               </ul>
+               <div class="tab-content">
+                  <div id="desp-realizada" class="tab-pane panel panel-default fade in active">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">
+                           Despesas realizadas
+                        </h3>
+                     </div>
+                     <div class="panel-body">
+                        <div class="col-md-4 selecao-ano">
+                           <label for="mes_despesa">Selecione o mes para visualizar as despesas realizadas</label>
+                        </div>
+                        <div class="col-md-2">
+                           <select name="mes_despesa" class="form-control" onchange="javascript:recuperarRegistroPorMes('/despesa/grafico/mes/ano/', this.value, '0');">
+                              {% for mes in meses %}
+                              <!-- Forçando a comparação entre valores inteiros -->
+                              {% if mes_atual|add:0 == mes|add:0 %}
+                              <option value="{{mes}}" selected>{{mes}}</option>
+                              {% else %}
+                              <option value="{{mes}}">{{mes}}</option>
+                              {% endif %}
+                              {% endfor %}
+                           </select>
+                        </div>
+                     </div>
+                     <div class="panel-body">
+                        <div class="wrappeer" style="position: relative; height: 50vh">
+                           <canvas id="despesa_realizada_mes_grafico"></canvas>
+                        </div>
+                        <script>
+                           var ctx = document.getElementById('despesa_realizada_mes_grafico')
+                            .getContext("2d");
+                                                      
+                           var rotulos = JSON.parse('{{ rotulos|safe }}');
+                           var valores = JSON.parse('{{ valores|safe }}');
+                           
+                           var colors = [
+                              'rgba(255, 99, 132, 0.2)',
+                              'rgba(54, 162, 235, 0.2)',
+                              'rgba(255, 206, 86, 0.2)',
+                              'rgba(75, 192, 192, 0.2)',
+                              'rgba(153, 102, 255, 0.2)',
+                              'rgba(255, 159, 64, 0.2)',
+                              'rgba(74, 26, 252, 0.6)',
+                              'rgba(210, 79, 59, 0.2)',
+                              'rgba(87, 79, 178, 0.2)',
+                              'rgba(22, 79, 59, 0.2)',
+                              'rgba(17, 201, 59, 0.2)',
+                              'rgba(255, 226, 197, 0.2)',	
+                              'rgba(155, 89, 032, 0.2)',
+                              'rgba(44, 62, 35, 0.2)',
+                              'rgba(155, 106, 76, 0.2)',
+                              'rgba(65, 92, 92, 0.2)',
+                              'rgba(53, 22, 155, 0.2)',
+                              'rgba(155, 59, 54, 0.2)',
+                              'rgba(64, 16, 152, 0.6)',
+                              'rgba(110, 69, 49, 0.2)',
+                              'rgba(77, 69, 78, 0.2)',
+                              'rgba(12, 69, 49, 0.2)',
+                              'rgba(7, 101, 39, 0.2)',
+                              'rgba(155, 126, 97, 0.2)'
+                             ];
+                           
+                           var despesaRealizaMesGrafico = new Chart(ctx, {
+                               type: 'pie',
+                               data: {
+                                   labels: rotulos,
+                                   datasets: [{
+                                       label: 'Despesas realizadas',
+                                       data: valores,
+                                       backgroundColor: colors,
+                                       borderColor: 'white',
+                                       borderWidth: 1
+                                   }]
+                               },
+                           options: {
+                           responsive: true,
+                           maintainAspectRatio: false,
+                           legend: {
+                           position: 'right'
+                           },
+                           animation: {
+                           duration: 500,
+                           easing: "easeOutQuart",
+                           onComplete: function() {
+                           var ctx = this.chart.ctx;
+                           ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+                           ctx.textAlign = 'center';
+                           ctx.textBaseline = 'bottom';
+                           
+                           this.data.datasets.forEach(function(dataset) {
+                           
+                           for (var i = 0; i < dataset.data.length; i++) {
+                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
+                           total = dataset._meta[Object.keys(dataset._meta)[0]].total,
+                           mid_radius = model.innerRadius + (model.outerRadius - model.innerRadius) / 2,
+                           start_angle = model.startAngle,
+                           end_angle = model.endAngle,
+                           mid_angle = start_angle + (end_angle - start_angle) / 2;
+                           
+                           var x = mid_radius * Math.cos(mid_angle);
+                           var y = mid_radius * Math.sin(mid_angle);
+                           
+                           ctx.fillStyle = '#444'; // #fff
+                           if (i == 3) { // Darker text color for lighter background
+                           ctx.fillStyle = '#444';
+                           }
+                           var percent = String(Math.round(dataset.data[i] / total * 100)) + "%";
+                           //ctx.fillText(dataset.data[i], model.x + x + (x/2), model.y + y + (y/2));
+                           // Display percent in another line, line break doesn't work for fillText
+                           ctx.fillText(percent, model.x + x + (x/2), model.y + y + (y/2) + 15);
+                           }
+                           });
+                           }
+                           }
+                           /*scales: {
+                           yAxes: [{
+                           ticks: {
+                           beginAtZero:true
+                           }
+                           }]
+                           }*/
+                           }
+                           });
+                        </script>
+                     </div>
+                  </div>
+                  <div id="desp-futura" class="tab-pane panel panel-default fade">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">
+                           Despesas futuras
+                        </h3>
+                     </div>
+                     <div class="panel-body">
+                        <div class="col-md-4 selecao-ano">
+                           <label for="mes_despesa_futura">Selecione o mes para visualizar as despesas futuras</label>
+                        </div>
+                        <div class="col-md-2">
+                           <select name="mes_despesa_futura" class="form-control" onchange="javascript:recuperarRegistroPorMes('/despesa/grafico/mes/ano/', this.value, '1');">
+                              {% for mes in meses_futura %}
+                              <!-- Forçando a comparação entre valores inteiros -->
+                              {% if mes_futura|add:0 == mes|add:0 %}
+                              <option value="{{mes}}" selected>{{mes}}</option>
+                              {% else %}
+                              <option value="{{mes}}">{{mes}}</option>
+                              {% endif %}
+                              {% endfor %}
+                           </select>
+                        </div>
+                     </div>
+                     <div class="panel-body">
+                        <div class="wrappeer" style="position: relative; height: 50vh">
+                           <canvas id="despesa_futura_mes_grafico"></canvas>
+                        </div>
+                        <script>
+                           var ctx = document.getElementById('despesa_futura_mes_grafico');
+                           
+                           var rotulos_futura = JSON.parse('{{ rotulos_futura|safe }}');
+                           var valores_futura = JSON.parse('{{ valores_futura|safe }}');
+                           
+                           var colors = [
+                              'rgba(255, 99, 132, 0.2)',
+                              'rgba(54, 162, 235, 0.2)',
+                              'rgba(255, 206, 86, 0.2)',
+                              'rgba(75, 192, 192, 0.2)',
+                              'rgba(153, 102, 255, 0.2)',
+                              'rgba(255, 159, 64, 0.2)',
+                              'rgba(74, 26, 252, 0.6)',
+                              'rgba(210, 79, 59, 0.2)',
+                              'rgba(87, 79, 178, 0.2)',
+                              'rgba(22, 79, 59, 0.2)',
+                              'rgba(17, 201, 59, 0.2)',
+                              'rgba(255, 226, 197, 0.2)',	
+                              'rgba(155, 89, 032, 0.2)',
+                              'rgba(44, 62, 35, 0.2)',
+                              'rgba(155, 106, 76, 0.2)',
+                              'rgba(65, 92, 92, 0.2)',
+                              'rgba(53, 22, 155, 0.2)',
+                              'rgba(155, 59, 54, 0.2)',
+                              'rgba(64, 16, 152, 0.6)',
+                              'rgba(110, 69, 49, 0.2)',
+                              'rgba(77, 69, 78, 0.2)',
+                              'rgba(12, 69, 49, 0.2)',
+                              'rgba(7, 101, 39, 0.2)',
+                              'rgba(155, 126, 97, 0.2)'
+                             ];
+                           
+                           var despesaFuturaMesGrafico = new Chart(ctx, {
+                               type: 'pie',
+                               data: {
+                                   labels: rotulos_futura,
+                                   datasets: [{
+                                       label: 'Despesas futuras',
+                                       data: valores_futura,
+                                       backgroundColor: colors,
+                                       borderColor: 'white',
+                                       borderWidth: 1
+                                   }]
+                               },
+                               options: {		
+                           responsive: true,
+                           maintainAspectRatio: false,
+                           legend: {
+                           position: 'right'
+                           },
+                           animation: {
+                           duration: 500,
+                           easing: "easeOutQuart",
+                           onComplete: function() {
+                           var ctx = this.chart.ctx;
+                           ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+                           ctx.textAlign = 'center';
+                           ctx.textBaseline = 'bottom';
+                           
+                           this.data.datasets.forEach(function(dataset) {
+                           
+                           for (var i = 0; i < dataset.data.length; i++) {
+                           var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
+                           total = dataset._meta[Object.keys(dataset._meta)[0]].total,
+                           mid_radius = model.innerRadius + (model.outerRadius - model.innerRadius) / 2,
+                           start_angle = model.startAngle,
+                           end_angle = model.endAngle,
+                           mid_angle = start_angle + (end_angle - start_angle) / 2;
+                           
+                           var x = mid_radius * Math.cos(mid_angle);
+                           var y = mid_radius * Math.sin(mid_angle);
+                           
+                           ctx.fillStyle = '#444'; // #fff
+                           if (i == 3) { // Darker text color for lighter background
+                           ctx.fillStyle = '#444';
+                           }
+                           var percent = String(Math.round(dataset.data[i] / total * 100)) + "%";
+                           //ctx.fillText(dataset.data[i], model.x + x + (x/2), model.y + y + (y/2));
+                           // Display percent in another line, line break doesn't work for fillText
+                           ctx.fillText(percent, model.x + x + (x/2), model.y + y + (y/2) + 15);
+                           }
+                           });
+                           }
+                           }
+                           /*scales: {
+                           yAxes: [{
+                           ticks: {
+                           beginAtZero:true
+                           }
+                           }]
+                           }*/
+                           }
+                           });
+                        </script>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</div>
+{% if status == 'danger' %}
+<script>document.getElementById('show_content').style.display = 'none';</script>
+{% endif %}
+{% if status == 'warning' %}
+<script>
+   $(function() {
+       $('.nav-tabs a[href="#desp-futura"]').tab('show');
+   });
+</script>
+{% endif %}
+{% if status == 'info' %}
+<script>
+   $(function() {
+       $('.nav-tabs a[href="#desp-realizada"]').tab('show');
+   });
+</script>
+{% endif %}
+{% endblock %}

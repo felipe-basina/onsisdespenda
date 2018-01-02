@@ -1,0 +1,159 @@
+{% extends 'onsis/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Tipo de despesa <small> </small>
+        </h1>
+        <ol class="breadcrumb">
+        	<li>Formul&aacute;rios</li>
+            <li class="active">
+                <i class="fa fa-pencil-square fa-fw"></i> Tipo de despesa
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<i class="fa fa-info-circle fa-fw"></i> Tipos de despesa
+				</h3>
+			</div>
+			<div class="panel-body">
+				<p>Defina seus tipos de despesa!</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3"></div>
+	<div class="col-sm-6">
+		{% if mensagem %}
+			<div class="alert alert-{{ status }} alert-dismissable fade in" style="display: block;">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+				<strong>{{ mensagem }}</strong>
+			</div>
+		{% endif %}
+	</div>
+	<div class="col-sm-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+
+<div id="wait" style="display: block;">
+	<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+	<span>Carregando...</span>
+</div>
+
+<div id="show_content" style="display: none;">
+		<div class="panel panel-default">
+		
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Formul&aacute;rio de tipo despesa
+				</h3>
+			</div>
+			
+			<!-- Formulário -->
+			<div class="panel-body">
+				<div class="col-md-8">
+                    {% if cd_reg <= 0 %}
+                        <form id="tipoDespesaForm" method="POST" class="post-form" action="/tipo/despesa/novo/">{% csrf_token %}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            <div class="form-group control-group">
+                                {{ form.as_p }}
+                            </div>
+                            <div>
+                                <center>
+                                    <button type="submit" class="btn btn-primary">salvar</button>
+                                    <button type="button" class="btn btn-default limpar">limpar</button>
+                                </center>
+                            </div>
+                         </form>
+                     {% else %}
+                        <form id="tipoDespesaAtualizacaoForm" method="POST" class="post-form" 
+                            action="/tipo/despesa/novo/{{ cd_reg }}">{% csrf_token %}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            <div class="form-group control-group">
+                                {{ form.as_p }}
+                            </div>
+                            <div>
+                                <center>
+                                    <button type="submit" class="btn btn-primary">salvar</button>
+                                    <button type="button" class="btn btn-default limpar">limpar</button>
+                                </center>
+                            </div>
+                         </form>
+                     {% endif %}
+				</div>				
+			</div>
+			
+			<!-- Grid -->
+			<div class="panel-body">
+
+					<div class="col-md-10">
+						<div id="tipo_despesa_div" class="form-group table-responsive">
+													
+							<table id="tipo-despesa" class="display table-striped" width="100%">
+								<thead>
+									<tr>
+										<th>descri&ccedil;&atilde;o</th>
+										<th>data de cria&ccedil;&atilde;o</th>
+										<th>data de atualiza&ccedil;&atilde;o</th>
+										<th>editar</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for tipo in tipos %}
+										<tr class="alinhamento-texto">
+											<td class="alinhamento-texto-esquerdo">{{ tipo.ds_tipo_despesa }}</td>
+											<td>
+												{{ tipo.dt_criacao|date:'d/m/Y H:i' }}
+											</td>
+											<td>
+												{{ tipo.dt_atualizacao|date:'d/m/Y H:i' }}
+											</td>
+											{% if tipo.cd_usuario == 0 %}
+												<td><i class="fa fa-thumbs-down fa-fw" title="Edi&ccedil;&atilde;o n&atilde;o permitida" style="cursor: pointer;"></i></td>
+											{% else %}
+												<td>
+													<a style="cursor: pointer;"
+														onclick="javascript:confirmarOperacao('/tipo/despesa/editar/{{ tipo.cd_registro }}', 'primary', 'Deseja realmente editar o item selecionado?');"
+														title='Editar tipo de despesa'>
+														<i class="fa fa-pencil-square-o fa-fw"></i>
+													</a>
+												</td>
+                                                <!--<td><i class="fa fa-exclamation-triangle fa-fw" title="Op&ccedil;&atilde;o temporariamente indispon&iacute;vel" style="cursor: pointer;"></i></td>-->
+											{% endif %}
+										</tr>
+									{% endfor %}																		
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
+						
+						</div>
+					</div>
+			
+			</div>
+		</div>
+	</div>	
+	</div>
+</div>
+{% endblock %}

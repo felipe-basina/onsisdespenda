@@ -1,0 +1,108 @@
+{% extends 'onsis/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Relat&oacute;rio de renda x despesa <small> </small>
+        </h1>
+        <ol class="breadcrumb">
+        	<li>Relat&oacute;rios</li>
+        	<li>Ano</li>
+            <li class="active">
+                <i class="fa fa-money"></i> x <i class="fa fa-credit-card"></i> Rela&ccedil;&atilde;o renda x despesa
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<i class="fa fa-info-circle fa-fw"></i> Relat&oacute;rio de renda x despesa
+				</h3>
+			</div>
+			<div class="panel-body">
+				<p>Relat&oacute;rios de rendas x despesas</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3"></div>
+	<div class="col-sm-6">
+		{% if template.mensagem %}
+			<div class="alert alert-{{ template.status }} alert-dismissable fade in" style="display: block;">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+				<strong>{{ template.mensagem }}</strong>
+			</div>
+		{% endif %}
+	</div>
+	<div class="col-sm-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+
+<div id="wait" style="display: block;">
+	<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+	<span>Carregando...</span>
+</div>
+
+<div id="show_content" style="display: none;">
+
+		<div class="panel panel-default">
+		
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Relat&oacute;rio de rela&ccedil;&atilde;o entre rendas e despesas
+				</h3>
+			</div>
+			
+			<!-- Grid -->
+			<div class="panel-body">
+
+					<div class="col-md-12">
+						<div id="relacao_ano_div" class="form-group table-responsive">
+													
+							<table id="relacao-ano-tbl" class="table-striped" width="100%">
+								<thead>
+									<tr>
+										<th>ano</th>
+										<th>valor renda</th>
+										<th>valor despesa</th>
+										<th>diferen&ccedil;a</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for periodo, valor_renda, valor_despesa, diferenca in template.relacao %}
+										<tr class="alinhamento-texto">
+                                             <td>{{ periodo }}</td>
+                                             <td>{{ valor_renda|intcomma }}</td>
+                                             <td>{{ valor_despesa|intcomma }}</td>
+                                             <td>{{ diferenca|intcomma }}</td>
+										</tr>
+									{% endfor %}																	
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
+						
+						</div>						
+					</div>
+			
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'onsis/base.html' %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Hist&oacute;rico <small> </small>
+        </h1>
+        <ol class="breadcrumb">
+            <li class="active">
+                <i class="fa fa-newspaper-o fa-fw"></i> Hist&oacute;rico de evento
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<i class="fa fa-info-circle fa-fw"></i> Hist&oacute;rico de eventos usu&aacute;rio
+				</h3>
+			</div>
+			<div class="panel-body">
+				<p>Aqui voc&ecirc; poder&aacute; visualizar o hist&oacute;rico das suas a&ccedil;&otilde;es.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3"></div>
+	<div class="col-sm-6">
+		{% if template.mensagem %}
+			<div class="alert alert-{{ template.status }} alert-dismissable fade in" style="display: block;">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+				<strong>{{ template.mensagem }}</strong>
+			</div>
+		{% endif %}
+	</div>
+	<div class="col-sm-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+	
+<div id="wait" style="display: block;">
+	<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+	<span>Carregando...</span>
+</div>
+
+<div id="show_content" style="display: none;">
+
+    <div class="panel-body">
+        <div class="col-md-4 selecao-ano">
+            <label for="ano_evento">Selecione o ano para visualizar os eventos</label>
+        </div>
+        <div class="col-md-2">
+            <select name="ano_evento" class="form-control"
+                onchange="javascript:recuperarRegistroPorAno('/evento/mes/ano/', this.value);">
+                {% for ano in template.anos %}
+                    <!-- Forçando a comparação entre valores inteiros -->
+                    {% if template.ano_atual|add:0 == ano|add:0 %}
+                        <option value="{{ano}}" selected>{{ano}}</option>
+                    {% else %}
+                        <option value="{{ano}}">{{ano}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+		<div class="panel panel-default">
+		
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Eventos de {{ request.user.username }}
+				</h3>
+			</div>
+			
+			<!-- Grid -->
+			<div class="panel-body">
+
+					<div class="col-md-12">
+						<div id="evento_div" class="form-group table-responsive">
+													
+							<table id="evento-tbl" class="table-striped" width="100%">
+								<thead>
+									<tr>
+										<th>dt. evento</th>
+										<th>descri&ccedil;&atilde;o</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for evento in template.eventos %}
+										<tr class="alinhamento-texto">
+											<td data-order="{{ evento.dt_evento|date:'d/m/Y' }}">
+												{{ evento.dt_evento|date:'d/m/Y H:i:s' }}
+											</td>
+											<td>{{ evento.ds_evento }}</td>
+										</tr>
+									{% endfor %}																
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
+						
+						</div>						
+					</div>
+			
+			</div>
+			
+		</div>	
+	</div>
+	</div>
+</div>
+{% endblock %}
