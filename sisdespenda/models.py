@@ -44,6 +44,7 @@ class DespesaTbl(models.Model):
     dt_criacao = models.DateTimeField()
     dt_atualizacao = models.DateTimeField()
     cd_usuario = models.BigIntegerField()
+    cd_recorrencia_despesa = models.BigIntegerField()
     cd_tipo_despesa = models.ForeignKey('TipoDespesaTbl', models.DO_NOTHING, db_column='cd_tipo_despesa', blank=True, null=True)
 
     class Meta:
@@ -76,7 +77,53 @@ class DespesaForm(ModelForm):
         super(DespesaForm, self).__init__(*args, **kwargs)
         # Define qual campo no formulario nao sera mais obrigatorio
         self.fields['ds_despesa'].required = False
-        
+       
+class RecorrenciaDespesaTbl(models.Model):
+    cd_registro = models.BigAutoField(primary_key=True)
+    cd_usuario = models.BigIntegerField()
+    vl_despesa = models.DecimalField(max_digits=1000, decimal_places=2)
+    ds_despesa = models.CharField(max_length=100)
+    cd_tipo_despesa = models.ForeignKey('TipoDespesaTbl', models.DO_NOTHING, db_column='cd_tipo_despesa', blank=True, null=True)
+    recorrencia = models.CharField(max_length=1)
+    dia_recorrencia = models.IntegerField()
+    mes_recorrencia = models.IntegerField()
+    dt_criacao = models.DateTimeField()
+
+    class Meta:
+        ordering = ['-dt_criacao']
+        managed = True
+        db_table = 'recorrencia_despesa_tbl'
+        verbose_name = ('Recorrencia despesa')
+
+RECORRENCIA_OPCOES = (
+    ('M', 'mês'),
+    ('A', 'ano')
+)
+
+DIAS_OPCOES = [(str(i), str(i)) for i in range(1, 32)]
+MESES_OPCOES = [(str(i), str(i)) for i in range(1, 13)]
+
+class RecorrenciaDespesaForm(ModelForm):
+    class Meta:
+        model = RecorrenciaDespesaTbl
+        fields = ['dia_recorrencia', 'mes_recorrencia', 'recorrencia', 'vl_despesa', 'cd_tipo_despesa', 'ds_despesa']
+        labels = {
+            'dia_recorrencia': ('Dia da recorrência'),
+            'mes_recorrencia': ('Mês da recorrência'),
+            'recorrencia': ('Tipo da recorrência'),
+            'vl_despesa': ('Valor da despesa'),
+            'cd_tipo_despesa': ('Tipo de despesa'),
+            'ds_despesa': ('Descrição da despesa'),
+        }
+        widgets = {
+            'dia_recorrencia': forms.Select(choices=DIAS_OPCOES, attrs={'class': 'form-control tamanho_caixa',}),
+            'mes_recorrencia': forms.Select(choices=MESES_OPCOES, attrs={'class': 'form-control tamanho_caixa',}),
+            'recorrencia': forms.RadioSelect(choices=RECORRENCIA_OPCOES, attrs={'class': 'form-control',}),
+            'vl_despesa': forms.NumberInput(attrs={'class': 'form-control', 'step': "0.01"}),
+            'cd_tipo_despesa': forms.Select(attrs={'class': 'form-control',}),
+            'ds_despesa': forms.TextInput(attrs={'class': 'form-control',}),
+        }
+
 class EventoTbl(models.Model):
     cd_registro = models.BigAutoField(primary_key=True)
     ds_evento = models.CharField(max_length=100)

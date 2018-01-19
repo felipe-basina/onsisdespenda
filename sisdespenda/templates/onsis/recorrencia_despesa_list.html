@@ -1,0 +1,173 @@
+{% extends 'onsis/base.html' %}
+{% load humanize %}
+{% load ordenacao_data %}
+{% block content %}
+<div class="row">
+   <div class="col-lg-12">
+      <h1 class="page-header">
+         Recorr&ecirc;ncia de despesa <small> </small>
+      </h1>
+      <ol class="breadcrumb">
+         <li>Formul&aacute;rios</li>
+         <li class="active">
+            <i class="fa fa-repeat fa fa-credit-card fa-fw"></i> Recorr&ecirc;ncia de despesa
+         </li>
+      </ol>
+   </div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h3 class="panel-title">
+               <i class="fa fa-info-circle fa-fw"></i> Recorr&ecirc;ncia de despesa
+            </h3>
+         </div>
+         <div class="panel-body">
+            <p>Defina o per&iacute;odo de recorr&ecirc;ncia de suas despesas!</p>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-3"></div>
+   <div class="col-sm-6">
+      {% if template.mensagem %}
+      <div class="alert alert-{{ template.status }} alert-dismissable fade in" style="display: block;">
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+         <strong>{{ template.mensagem }}</strong>
+      </div>
+      {% endif %}
+   </div>
+   <div class="col-sm-3"></div>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <div id="wait" style="display: block;">
+         <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+         <span>Carregando...</span>
+      </div>
+      <div id="show_content" style="display: none;">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">
+                  Formul&aacute;rio de recorr&ecirc;ncia de despesa
+               </h3>
+            </div>
+            <!-- Formulário -->
+            <div class="panel-body">
+               <div class="col-md-8">
+                   {% if cd_reg <= 0 %}
+                      <form id="recorrenciaDespesaForm" method="POST" class="post-form" action="/recorrencia/despesa/novo/">
+                         {% csrf_token %}
+                         <div class="form-group control-group">
+                            {{ template.form.as_p }}
+                         </div>
+                         <div>
+                            <center>
+                               <button type="submit" class="btn btn-primary">salvar</button>
+                               <button type="button" class="btn btn-default limpar">limpar</button>
+                            </center>
+                         </div>
+                      </form>
+                   {% else %}
+                      <form id="recorrenciaDespesaAtualizacaoForm" method="POST" 
+                        class="post-form" action="/recorrencia/despesa/novo/{{ cd_reg }}">
+                         {% csrf_token %}
+                         <div class="form-group control-group">
+                            {{ template.form.as_p }}
+                         </div>
+                         <div>
+                            <center>
+                               <button type="submit" class="btn btn-primary">salvar</button>
+                               <button type="button" class="btn btn-default limpar">limpar</button>
+                            </center>
+                         </div>
+                      </form>
+                     {% endif %}
+               </div>
+            </div>
+      
+            <!-- Grid -->
+            <div class="panel-body">
+
+                <div class="col-md-12">
+                  <div id="renda_div" class="form-group table-responsive">
+                                
+                    <table id="recorrencia-despesa-tbl" class="table-striped" width="100%">
+                      <thead>
+                        <tr>
+                           <th>tipo de despesa</th>
+                           <th>descri&ccedil;&atilde;o</th>
+                           <th>valor</th>
+                           <th>dia da recorr&ecirc;ncia</th>
+                           <th>m&ecirc;s da recorr&ecirc;ncia</th>
+                           <th>recorr&ecirc;ncia da despesa</th>
+                           <th>data de cria&ccedil;&atilde;o</th>
+                           <th>editar</th>
+                           <th>remover</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% if template.recorrencias %}
+                        {% for recorrencia_despesa in template.recorrencias|order_by:'-dt_criacao' %}
+                          <tr class="alinhamento-texto">
+                             <td class="alinhamento-texto-esquerdo">{{ recorrencia_despesa.cd_tipo_despesa }}</td>
+                             <td class="alinhamento-texto-esquerdo">{{ recorrencia_despesa.ds_despesa }}</td>
+                             <td>
+                                {{ recorrencia_despesa.vl_despesa|intcomma }}
+                             </td>
+                             <td>
+                                {{ recorrencia_despesa.dia_recorrencia }}
+                             </td>
+                             <td>
+                                {{ recorrencia_despesa.mes_recorrencia }}
+                             </td>
+                             <td>
+                                {{ recorrencia_despesa.recorrencia }}
+                             </td>
+                             <td>
+                                {{ recorrencia_despesa.dt_criacao|date:'d/m/Y H:i' }}
+                             </td>
+                             <td>
+                                <a style="cursor: pointer;"
+                                  onclick="javascript:confirmarOperacao('/recorrencia/despesa/editar/{{ recorrencia_despesa.cd_registro }}', 'primary', 'Deseja realmente editar o registro?');"
+                                  title='Editar recorrência despesa'>
+                                  <i class="fa fa-pencil-square-o fa-fw"></i>
+                                </a>
+                             </td>
+                             <td>
+                                <a style="cursor: pointer;"
+                                   onclick="javascript:confirmarOperacao('/recorrencia/despesa/remove/{{ recorrencia_despesa.cd_registro }}', 'danger', 'Deseja realmente remover o registro?');"
+                                   title='Remover recorrência despesa'>
+                                <i class="fa fa-trash-o fa-fw"></i>
+                                </a>
+                             </td>
+                          </tr>
+                        {% endfor %}
+                        {% endif %}                                    
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  
+                  </div>
+                </div>
+            
+            </div> 
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

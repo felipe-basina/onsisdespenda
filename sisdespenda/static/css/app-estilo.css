@@ -67,6 +67,19 @@ a.navbar-inverse .navbar-nav>li>a {
 	cursor: pointer;
 }
 
+.tamanho_caixa {
+	width: 120px;
+}
+
+ul li{
+  	display: inline;
+}
+
+#id_recorrencia {
+	list-style-type: none;
+	padding-left: 16px;
+}
+
 /**************************** data tables ***/
 
 tr th {
@@ -142,6 +155,11 @@ tr th {
 	height: 200px;
 }
 
+#recorrencia-despesa-tbl {
+	widthi: 400px;
+	height: 200px;
+}
+
 #relacao-ano-tbl {
 	widthi: 400px;
 	height: 200px;
@@ -168,7 +186,8 @@ spani {
 #renda-mes-tbl_length select,
 #despesa-real-mes-tbl_length select,
 #despesa-fut-mes-tbl_length select,
-#despesa-tbl_length select, 
+#despesa-tbl_length select,
+#recorrencia-despesa-tbl_length select, 
 #despesa-futura-tbl_length select, 
 #renda-tbl_length select, 
 #tipo-renda_length select,

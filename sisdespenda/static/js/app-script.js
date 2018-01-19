@@ -42,6 +42,42 @@ $(function() {
 	// Ordena pelos valores da segunda coluna
 	dtTipoRenda.fnSort([[1, 'asc']]);
     
+    $('#recorrencia-despesa-tbl').dataTable({
+        dom: 'lBfrtip',
+            buttons: [
+                {
+                  extend: 'excelHtml5',
+                  title: 'recorrencia-excel-online-sisdespenda_' + new Date().yyyymmdd(),
+                  exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5 ]
+                  }
+                },
+                {
+                  extend: 'pdfHtml5',
+                  orientation: 'landscape',
+                  pageSize: 'LEGAL',
+                  title: 'recorrencia-pdf-online-sisdespenda_' + new Date().yyyymmdd(),
+                  exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5 ]
+                  },
+                  customize : function(doc) {
+                    doc.defaultStyle.alignment = 'center';
+                    doc.styles.tableHeader.alignment = 'center';
+                    doc.content[1].table.widths = 
+                        Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                  }
+                }
+            ],
+    pagingType : 'simple', // Remove a paginação por números das páginas
+    aoColumnDefs : [ // Remove o item para ordenação dos dois últimos elementos
+    {
+      bSortable : false,
+      aTargets : [ -1, -2 ]
+    } ],
+        bSort: false,
+    responsive: true
+  });
+    
     $('#despesa-tbl').dataTable({
         dom: 'lBfrtip',
             buttons: [
@@ -273,8 +309,8 @@ $(function() {
             ]
 	});
     
-    // Posiciona os botões para exportar dados data table
-    $('.dt-buttons').css('margin-left', '15px');
+  // Posiciona os botões para exportar dados data table
+  $('.dt-buttons').css('margin-left', '15px');
     
 	$(window).load(function() {
 		console.log('load depois do DOM!');

@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib import admin
-from sisdespenda.views import inicial, login_logout, tipo_renda, renda, despesa, tipo_despesa, despesa_relatorio, renda_relatorio, relacao_relatorio, evento, saldo, despesa_grafico
+from sisdespenda.views import inicial, login_logout, tipo_renda, renda, despesa, tipo_despesa, despesa_relatorio, renda_relatorio, relacao_relatorio, evento, saldo, despesa_grafico, recorrencia_despesa
 
 urlpatterns = [
     url(r'^onsisdespenda/acc/admin/', admin.site.urls),
@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^renda/editar/(\d+)$', renda.renda_edit, name='renda_edit'),
     url(r'^renda/lista/ano/(\d+)$', renda.renda_list_param, name='renda_list_param'),
     url(r'^renda/remove/(?P<pk>\d+)$', renda.renda_remove, name='renda_remove'),
+    url(r'^recorrencia/despesa/lista$', recorrencia_despesa.recorrencia_despesa_list, name='recorrencia_despesa_list'),
     url(r'^despesa/lista$', despesa.despesa_list, name='despesa_list'),
     url(r'^despesa/novo/$', despesa.despesa_new, name='despesa_new'),
     url(r'^despesa/novo/(?P<pk>\d+)$', despesa.despesa_update, name='despesa_update'),
