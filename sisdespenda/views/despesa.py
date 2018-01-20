@@ -8,6 +8,7 @@ from django.db import connection
 from collections import namedtuple
 from ..models import DespesaTbl, TipoDespesaTbl
 from ..models import DespesaForm
+from sisdespenda.views.recorrencia_despesa import recuperar_recorrencias_usuario
 import datetime
 import itertools
 
@@ -103,6 +104,10 @@ def despesa_update(request, pk):
         
                 return render(request, 'onsis/despesa_list.html', {'template': tupla_renda, 'cd_reg': 0})
                         
+            cd_recorrencia_despesa = 0
+            if despesa_cadastrada.cd_recorrencia_despesa and despesa_cadastrada.cd_recorrencia_despesa > 0:
+                cd_recorrencia_despesa = despesa_cadastrada.cd_recorrencia_despesa
+
             nova_despesa = DespesaTbl(cd_registro=pk,
                                     dt_criacao=despesa_cadastrada.dt_criacao,
                                     cd_usuario=despesa_cadastrada.cd_usuario,
@@ -110,7 +115,8 @@ def despesa_update(request, pk):
                                     ds_despesa=descricao,
                                     cd_tipo_despesa=tipo_despesa,
                                     dt_despesa=str(despesa.dt_despesa),
-                                    vl_despesa=str(despesa.vl_despesa))
+                                    vl_despesa=str(despesa.vl_despesa),
+                                    cd_recorrencia_despesa=cd_recorrencia_despesa)
             nova_despesa.save(force_insert=False)
                                             
             dict_despesa = definir_valores_despesa_template(request, 
@@ -286,12 +292,42 @@ def recuperar_anos_despesa(request):
 def recuperar_todos_tipo_despesa_usuario(request):
     return TipoDespesaTbl.objects.filter(cd_usuario__in=[0, request.user.id]).order_by('ds_tipo_despesa')
     
+# Verificar se a despesa recorrente ja se encontra na listagem de despesas    
+def verificar_despesa_recorrente(despesas, id_despesa_recorrente):
+    return any(despesa.cd_recorrencia_despesa == id_despesa_recorrente for despesa in despesas)
+
+# Define a nova despesa, a partir da despesa recorrente, caso ainda nao exista
+def definir_despesa_apartir_despesa_recorrente(request, despesas, recorrente):
+    if recorrente.recorrencia == 'M' or recorrente.mes_recorrencia == mes_atual:
+        if not verificar_despesa_recorrente(despesas, recorrente.cd_registro):
+            ano_atual = datetime.date.today().year
+            mes_atual = datetime.date.today().month
+            dia_atual = datetime.date.today().day
+
+            nova_despesa = DespesaTbl(cd_usuario=request.user.id,
+                vl_despesa=recorrente.vl_despesa,
+                ds_despesa=recorrente.ds_despesa,
+                dt_despesa=(str(ano_atual) + '-' + str(mes_atual) + '-' + str(recorrente.dia_recorrencia)),
+                dt_criacao=datetime.datetime.utcnow().replace(tzinfo=utc),
+                dt_atualizacao=datetime.datetime.utcnow().replace(tzinfo=utc),
+                cd_recorrencia_despesa=recorrente.cd_registro,
+                cd_tipo_despesa=recorrente.cd_tipo_despesa)
+        
+            nova_despesa.save()
+            return nova_despesa
+    return None
+
 # Definir valores para template
 def definir_valores_despesa_template(request, ano=datetime.date.today().year):
     dict_despesa = {}
         
     ano_atual = datetime.date.today().year
+    mes_atual = datetime.date.today().month
+    dia_atual = datetime.date.today().day
     
+    # Recuperar despesas recorrentes
+    despesas_recorrentes = recuperar_recorrencias_usuario(request)
+
     # Caso o ano de pesquisa seja maior do que o ano atual
     # Entao nao existirao despesas realizadas!
     if int(ano) > ano_atual:
@@ -307,6 +343,26 @@ def definir_valores_despesa_template(request, ano=datetime.date.today().year):
     despesas_futura = recuperar_despesas_futura_usuario(request, ano)
     dict_despesa['despesas_futura'] = despesas_futura
     
+    # Adiciona despesas recorrentes na lista de despesas atuais e futuras
+    if despesas_recorrentes:
+        for recorrente in despesas_recorrentes:
+            
+            if recorrente.dia_recorrencia <= dia_atual:
+                # Verifica se a recorrencia ja foi adicionada na lista de despesas
+                # Caso nao esteja deve-se adicionar na base e na listagem de despesas
+                nova_despesa = definir_despesa_apartir_despesa_recorrente(request, despesas, recorrente)
+                if nova_despesa:
+                     despesas = recuperar_despesas_usuario(request, ano)
+
+            else: # Despesa futura
+                nova_despesa = definir_despesa_apartir_despesa_recorrente(request, despesas_futura, recorrente)
+                if nova_despesa:
+                     despesas_futura = recuperar_despesas_futura_usuario(request, ano)
+
+    # Redefine as listas de despesas
+    dict_despesa['despesas'] = despesas
+    dict_despesa['despesas_futura'] = despesas_futura
+
     total_despesa_mes = recuperar_total_despesa_usuario_mes(request, ano)
     if total_despesa_mes['vl_despesa__sum'] == None:
         total_despesa_mes['vl_despesa__sum'] = 0.0
