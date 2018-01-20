@@ -337,8 +337,7 @@ $(function() {
 
     // Define valor padrão
     $('select[id=id_dia_recorrencia], select[id=id_mes_recorrencia]').val('1');
-    $('input[id=id_dia_recorrencia]').prop('checked', true);
-    $('input[id=id_mes_recorrencia]').prop('checked', false);
+    $('input[name=recorrencia]').prop('checked', false);
 	});	
 
     

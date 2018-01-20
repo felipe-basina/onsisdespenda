@@ -298,12 +298,12 @@ def verificar_despesa_recorrente(despesas, id_despesa_recorrente):
 
 # Define a nova despesa, a partir da despesa recorrente, caso ainda nao exista
 def definir_despesa_apartir_despesa_recorrente(request, despesas, recorrente):
+    ano_atual = datetime.date.today().year
+    mes_atual = datetime.date.today().month
+    dia_atual = datetime.date.today().day
+
     if recorrente.recorrencia == 'M' or recorrente.mes_recorrencia == mes_atual:
         if not verificar_despesa_recorrente(despesas, recorrente.cd_registro):
-            ano_atual = datetime.date.today().year
-            mes_atual = datetime.date.today().month
-            dia_atual = datetime.date.today().day
-
             nova_despesa = DespesaTbl(cd_usuario=request.user.id,
                 vl_despesa=recorrente.vl_despesa,
                 ds_despesa=recorrente.ds_despesa,

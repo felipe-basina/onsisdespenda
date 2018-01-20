@@ -3,9 +3,6 @@ from django.http import *
 from django.shortcuts import render
 from django.utils.timezone import utc
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
-from django.db import connection
-from collections import namedtuple
 from ..models import RecorrenciaDespesaTbl, TipoDespesaTbl
 from ..models import RecorrenciaDespesaForm
 import datetime
