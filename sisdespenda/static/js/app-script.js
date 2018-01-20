@@ -334,6 +334,11 @@ $(function() {
 
 		// Limpa o item selecionado
 		$('select[id=id_cd_tipo_renda], select[id=id_cd_tipo_despesa]').val('');
+
+    // Define valor padrão
+    $('select[id=id_dia_recorrencia], select[id=id_mes_recorrencia]').val('1');
+    $('input[id=id_dia_recorrencia]').prop('checked', true);
+    $('input[id=id_mes_recorrencia]').prop('checked', false);
 	});	
 
     

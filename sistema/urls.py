@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^recorrencia/despesa/lista$', recorrencia_despesa.recorrencia_despesa_list, name='recorrencia_despesa_list'),
     url(r'^recorrencia/despesa/novo/$', recorrencia_despesa.recorrencia_despesa_new, name='recorrencia_despesa_new'),
     url(r'^recorrencia/despesa/novo/(?P<pk>\d+)$', recorrencia_despesa.recorrencia_despesa_new, name='recorrencia_despesa_new'),
+    url(r'^recorrencia/despesa/remove/(?P<pk>\d+)$', recorrencia_despesa.recorrencia_despesa_remove, name='recorrencia_despesa_remove'),
     url(r'^despesa/lista$', despesa.despesa_list, name='despesa_list'),
     url(r'^despesa/novo/$', despesa.despesa_new, name='despesa_new'),
     url(r'^despesa/novo/(?P<pk>\d+)$', despesa.despesa_update, name='despesa_update'),

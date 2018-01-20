@@ -18,6 +18,8 @@ def recorrencia_despesa_list(request):
 
 @login_required(login_url='/accounts/login/')
 def recorrencia_despesa_new(request, pk=0):
+	dict_recorrencia = {}
+
 	if request.method == "POST":
 		form = RecorrenciaDespesaForm(request.POST)
 		if form.is_valid():
@@ -36,10 +38,15 @@ def recorrencia_despesa_new(request, pk=0):
 			dict_recorrencia['status'] = 'danger'
 		pk=0
 	else:
-		dict_recorrencia = {}
 		dict_recorrencia = definir_valores_recorrencia_template(request)
 
-		recorrencia_despesa = recuperar_recorrencia_usuario_por_id_recorrencia_despesa(request, pk)
+		try:
+			recorrencia_despesa = recuperar_recorrencia_usuario_por_id_recorrencia_despesa(request, pk)
+		except RecorrenciaDespesaTbl.DoesNotExist:
+			dict_recorrencia['mensagem'] = 'Registro não encontrado!'
+			dict_recorrencia['status'] = 'danger'
+			return render(request, 'onsis/recorrencia_despesa_list.html', {'template': dict_recorrencia, 'cd_reg': 0})
+
 		form = RecorrenciaDespesaForm(initial={'cd_registro': recorrencia_despesa.cd_registro, 
 												'dia_recorrencia': recorrencia_despesa.dia_recorrencia, 
 												'mes_recorrencia': recorrencia_despesa.mes_recorrencia, 
@@ -53,6 +60,23 @@ def recorrencia_despesa_new(request, pk=0):
 		form.fields['cd_tipo_despesa'].queryset = recuperar_todos_tipo_despesa_usuario(request)
 
 	return render(request, 'onsis/recorrencia_despesa_list.html', { 'template': dict_recorrencia, 'cd_reg': pk })
+
+@login_required(login_url='/accounts/login/')
+def recorrencia_despesa_remove(request, pk):
+	try:
+		recorrencia_despesa = recuperar_recorrencia_usuario_por_id_recorrencia_despesa(request, pk)
+
+		if recorrencia_despesa:
+			recorrencia_despesa.delete()        
+			dict_recorrencia = definir_valores_recorrencia_template(request)
+			dict_recorrencia['mensagem'] = 'Recorrência removida com sucesso!'
+			dict_recorrencia['status'] = 'success'
+	except:
+		dict_recorrencia = definir_valores_recorrencia_template(request)
+		dict_recorrencia['mensagem'] = 'Recorrência não encontrada!'
+		dict_recorrencia['status'] = 'danger'
+        
+	return render(request, 'onsis/recorrencia_despesa_list.html', { 'template': dict_recorrencia })
 
 ######################################
 #          Funcoes diversas          #
@@ -79,6 +103,5 @@ def definir_valores_recorrencia_template(request):
 	form = RecorrenciaDespesaForm()
 	form.fields['cd_tipo_despesa'].queryset = recuperar_todos_tipo_despesa_usuario(request)
 	dict_recorrencia['form'] = form
-	dict_recorrencia['cd_reg'] = 0
 
 	return dict_recorrencia
