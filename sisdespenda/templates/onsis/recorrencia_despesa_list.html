@@ -58,7 +58,8 @@
             <div class="panel-body">
                <div class="col-md-8">
                    {% if cd_reg <= 0 %}
-                      <form id="recorrenciaDespesaForm" method="POST" class="post-form" action="/recorrencia/despesa/novo/">
+                      <form id="recorrenciaDespesaForm" method="POST" class="post-form" 
+                        action="/recorrencia/despesa/novo/">
                          {% csrf_token %}
                          <div class="form-group control-group">
                             {{ template.form.as_p }}
@@ -131,7 +132,7 @@
                              </td>
                              <td>
                                 <a style="cursor: pointer;"
-                                  onclick="javascript:confirmarOperacao('/recorrencia/despesa/editar/{{ recorrencia_despesa.cd_registro }}', 'primary', 'Deseja realmente editar o registro?');"
+                                  onclick="javascript:confirmarOperacao('/recorrencia/despesa/novo/{{ recorrencia_despesa.cd_registro }}', 'primary', 'Deseja realmente editar o registro?');"
                                   title='Editar recorrência despesa'>
                                   <i class="fa fa-pencil-square-o fa-fw"></i>
                                 </a>
