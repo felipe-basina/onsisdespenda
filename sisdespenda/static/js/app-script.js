@@ -79,6 +79,8 @@ $(function() {
   });
     
     $('#despesa-tbl').dataTable({
+        aLengthMenu: [[15, 30, 50, 100], [15, 30, 50, 100]],
+        iDisplayLength: 15,
         dom: 'lBfrtip',
             buttons: [
                 {
@@ -115,6 +117,8 @@ $(function() {
 	});
     
     $('#renda-tbl').dataTable({
+        aLengthMenu: [[15, 30, 50, 100], [15, 30, 50, 100]],
+        iDisplayLength: 15,
         dom: 'lBfrtip',
             buttons: [
                 {
@@ -151,6 +155,8 @@ $(function() {
 	});
            
 	var relatorio = $('#despesa-real-mes-tbl, #despesa-real-ano-tbl, #renda-mes-tbl, #renda-ano-tbl, #evento-tbl').dataTable({
+    aLengthMenu: [[15, 30, 50, 100], [15, 30, 50, 100]],
+    iDisplayLength: 15,
 		order : [ [ 0, 'desc' ] ],
 		pagingType : 'simple', // Remove a paginação por números das páginas
 		aoColumnDefs : [ // Remove o item para ordenação dos dois últimos elementos
@@ -182,6 +188,8 @@ $(function() {
     relatorio.fnSort([[0, 'desc']]);    
         
 	$('#despesa-fut-ano-tbl').dataTable({
+    aLengthMenu: [[15, 30, 50, 100], [15, 30, 50, 100]],
+    iDisplayLength: 15,
 		order : [ [ 0, 'desc' ] ],
 		pagingType : 'simple', // Remove a paginação por números das páginas
 		aoColumnDefs : [ // Remove o item para ordenação dos dois últimos elementos
@@ -211,7 +219,9 @@ $(function() {
 	});
 	
 	$('#despesa-fut-mes-tbl').dataTable({
-        order : [ [ 0, 'desc' ] ],
+    aLengthMenu: [[15, 30, 50, 100], [15, 30, 50, 100]],
+    iDisplayLength: 15,
+    order : [ [ 0, 'desc' ] ],
 		pagingType : 'simple', // Remove a paginação por números das páginas
 		aoColumnDefs : [ // Remove o item para ordenação dos dois últimos elementos
 		{
@@ -221,6 +231,8 @@ $(function() {
 	});	
 	
 	$('#despesa-futura-tbl').dataTable({
+    aLengthMenu: [[15, 30, 50, 100], [15, 30, 50, 100]],
+    iDisplayLength: 15,
 		pagingType : 'simple', // Remove a paginação por números das páginas
 		aoColumnDefs : [ // Remove o item para ordenação dos dois últimos elementos
 		{
@@ -256,7 +268,9 @@ $(function() {
             ]
 	});
     
-    $('#relacao-mes-tbl, #relacao-ano-tbl').dataTable({		
+    $('#relacao-mes-tbl, #relacao-ano-tbl').dataTable({
+    aLengthMenu: [[15, 30, 50, 100], [15, 30, 50, 100]],
+    iDisplayLength: 15,		
 		order : [ [ 0, 'desc' ] ],
 		pagingType : 'simple', // Remove a paginação por números das páginas
 		aoColumnDefs : [ // Remove o item para ordenação dos dois últimos elementos
@@ -286,7 +300,9 @@ $(function() {
 	});
 
     var dtSaldo = $('#saldo-tbl').dataTable({
-        ordering: false, // Remove a ordenação
+    aLengthMenu: [[15, 30, 50, 100], [15, 30, 50, 100]],
+    iDisplayLength: 15,
+    ordering: false, // Remove a ordenação
 		pagingType : 'simple', // Remove a paginação por números das páginas
         dom: 'lBfrtip',
             buttons: [
