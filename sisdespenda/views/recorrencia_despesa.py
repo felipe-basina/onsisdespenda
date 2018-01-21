@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from ..models import RecorrenciaDespesaTbl, TipoDespesaTbl
 from ..models import RecorrenciaDespesaForm
 import datetime
-import itertools
+from datetime import datetime as dt
 
 @login_required(login_url='/accounts/login/')
 def recorrencia_despesa_list(request):
@@ -22,6 +22,17 @@ def recorrencia_despesa_new(request, pk=0):
 		if form.is_valid():
 			recorrencia = form.save(commit=False)
 			if int(pk) > 0: recorrencia.cd_registro = pk
+
+			# Verifica se a data e valida
+			if not verificar_data_valida(recorrencia.dia_recorrencia, 
+											recorrencia.mes_recorrencia, 
+											datetime.date.today().year):
+				dict_recorrencia = definir_valores_recorrencia_template(request)
+				dict_recorrencia['mensagem'] = 'Os valores para dia/mês não formam uma data válida'
+				dict_recorrencia['status'] = 'danger'
+				dict_recorrencia['form'] = form
+				return render(request, 'onsis/recorrencia_despesa_list.html', {'template': dict_recorrencia, 'cd_reg': 0})
+
 			recorrencia.cd_usuario = request.user.id
 			recorrencia.dt_criacao = datetime.datetime.utcnow().replace(tzinfo=utc)
 			recorrencia.save()
@@ -90,6 +101,16 @@ def recuperar_recorrencias_usuario(request):
 # Tipo de despesa: recuperar tudo por usuario
 def recuperar_todos_tipo_despesa_usuario(request):
 	return TipoDespesaTbl.objects.filter(cd_usuario__in=[0, request.user.id]).order_by('ds_tipo_despesa')
+
+# Verificar se o dia + mes definido pode ser uma data valida
+def verificar_data_valida(dia, mes, ano):
+	try:
+		data = (str(ano) + str(mes) + str(dia))
+		# Se for possivel converter entao trata-se de uma data valida
+		dt.strptime(data, '%Y%m%d')
+		return True
+	except:
+		return False
 
 def definir_valores_recorrencia_template(request):
 	dict_recorrencia = {}
