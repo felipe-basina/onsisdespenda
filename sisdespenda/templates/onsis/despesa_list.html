@@ -248,7 +248,7 @@
                                     </tr>
                                  </thead>
                                  <tbody>
-                                    {% for despesa in template.despesas_futura|order_by:'-dt_despesa' %}
+                                    {% for despesa in template.despesas_futura|order_by:'dt_despesa' %}
                                     <tr class="alinhamento-texto">
                                        <td class="alinhamento-texto-esquerdo">{{ despesa.cd_tipo_despesa }}</td>
                                        <td class="alinhamento-texto-esquerdo">{{ despesa.ds_despesa }}</td>
