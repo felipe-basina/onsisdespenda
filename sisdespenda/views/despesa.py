@@ -9,6 +9,7 @@ from collections import namedtuple
 from ..models import DespesaTbl, TipoDespesaTbl
 from ..models import DespesaForm
 from sisdespenda.views.recorrencia_despesa import recuperar_recorrencias_usuario
+from itertools import chain
 import datetime
 import itertools
 
@@ -319,7 +320,7 @@ def definir_despesa_apartir_despesa_recorrente(request, despesas, recorrente, me
     return None
 
 # Adicionar despesas recorrentes existentes
-def adicionar_despesas_recorrentes(request, dict_despesa, ano):
+def adicionar_despesas_recorrentes(request, dict_despesa, todas_despesas, ano):
     ano_atual = datetime.date.today().year
     mes_atual = datetime.date.today().month
     dia_atual = datetime.date.today().day
@@ -327,48 +328,33 @@ def adicionar_despesas_recorrentes(request, dict_despesa, ano):
     # Recuperar despesas recorrentes
     despesas_recorrentes = recuperar_recorrencias_usuario(request)
 
-    # Recuperar todas as despesas, realizadas e futuras, no ano específico
-    todas_despesas = recuperar_todas_despesas_usuario(request, ano)
-
     # Adiciona despesas recorrentes na lista de despesas atuais e futuras
     if despesas_recorrentes:
         for recorrente in despesas_recorrentes:
-            if recorrente.dia_recorrencia <= dia_atual:
-                # Verifica se a recorrencia ja foi adicionada na lista de despesas
-                # Caso nao esteja deve-se adicionar na base
-                for _mes in range(mes_atual, 13):
-                    nova_despesa = definir_despesa_apartir_despesa_recorrente(request, 
-                                                                                todas_despesas, 
-                                                                                recorrente, 
-                                                                                _mes, 
-                                                                                ano_atual)
+            # Verifica se a recorrencia ja foi adicionada na lista de despesas
+            # Caso nao esteja deve-se adicionar na base
+            for _mes in range(mes_atual, 13):
+                nova_despesa = definir_despesa_apartir_despesa_recorrente(request, 
+                                                                            todas_despesas, 
+                                                                            recorrente, 
+                                                                            _mes, 
+                                                                            ano_atual)
 
-                despesas = recuperar_despesas_usuario(request, ano)
-                dict_despesa['despesas'] = despesas
-
-            else: # Despesa futura
-                # Cadastra despesa futura para todo o ano a partir do mes atual
-                for _mes in range(mes_atual, 13):
+            # Adiciona despesas futuras para o proximo ano a partir do mes especifico
+            if mes_atual == 10:
+                proximo_ano = ano + 1
+                todas_despesas = recuperar_todas_despesas_usuario(request, proximo_ano)
+                for _mes in range(1, 5):
                     nova_despesa = definir_despesa_apartir_despesa_recorrente(request, 
                                                                                 todas_despesas, 
                                                                                 recorrente,
                                                                                 _mes,
-                                                                                ano)
+                                                                                proximo_ano)
 
-                # Adiciona despesas futuras para o proximo ano a partir do mes especifico
-                if mes_atual == 10:
-                    proximo_ano = ano + 1
-                    todas_despesas = recuperar_todas_despesas_usuario(request, ano + 1)
-                    for _mes in range(1, 5):
-                        nova_despesa = definir_despesa_apartir_despesa_recorrente(request, 
-                                                                                    todas_despesas, 
-                                                                                    recorrente,
-                                                                                    _mes,
-                                                                                    proximo_ano)
-
-                    # Recupera todas as despesas novamente
-                    despesas_futura = recuperar_despesas_futura_usuario(request, ano)
-                    dict_despesa['despesas_futura'] = despesas_futura
+        despesas = recuperar_despesas_usuario(request, ano)
+        dict_despesa['despesas'] = despesas
+        despesas_futura = recuperar_despesas_futura_usuario(request, ano)
+        dict_despesa['despesas_futura'] = despesas_futura
 
     return dict_despesa
 
@@ -396,7 +382,9 @@ def definir_valores_despesa_template(request, ano=datetime.date.today().year):
 
     # Adiciona despesas recorrentes caso existam
     if int(ano) == ano_atual:
-        dict_despesa = adicionar_despesas_recorrentes(request, dict_despesa, ano)
+        # Junta as duas listas para verificacao de despesas recorrentes
+        todas_despesas = list(chain(despesas, despesas_futura))
+        dict_despesa = adicionar_despesas_recorrentes(request, dict_despesa, todas_despesas, ano)
     
     total_despesa_mes = recuperar_total_despesa_usuario_mes(request, ano)
     if total_despesa_mes['vl_despesa__sum'] == None:
