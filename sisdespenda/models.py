@@ -118,7 +118,7 @@ class RecorrenciaDespesaForm(ModelForm):
         widgets = {
             'dia_recorrencia': forms.Select(choices=DIAS_OPCOES, attrs={'class': 'form-control tamanho_caixa',}),
             'mes_recorrencia': forms.Select(choices=MESES_OPCOES, attrs={'class': 'form-control tamanho_caixa',}),
-            'recorrencia': forms.RadioSelect(choices=RECORRENCIA_OPCOES, attrs={'class': 'form-control',}),
+            'recorrencia': forms.RadioSelect(choices=RECORRENCIA_OPCOES, attrs={'class': 'custom_radio form-control',}),
             'vl_despesa': forms.NumberInput(attrs={'class': 'form-control', 'step': "0.01"}),
             'cd_tipo_despesa': forms.Select(attrs={'class': 'form-control',}),
             'ds_despesa': forms.TextInput(attrs={'class': 'form-control',}),

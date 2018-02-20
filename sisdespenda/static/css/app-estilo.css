@@ -80,6 +80,11 @@ ul li{
 	padding-left: 16px;
 }
 
+.custom_radio {
+    width: 30px!important;
+    height: 30px!important;
+}
+
 /**************************** data tables ***/
 
 tr th {
