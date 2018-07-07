@@ -4,6 +4,7 @@ __pycache__
 ambvirt
 /static
 .DS_Store
+settings-desenvolvimento-v2.py
 settings-desenvolvimento.py
 settings-producao.py
 settings-padrao.py
