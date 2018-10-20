@@ -344,7 +344,7 @@ def adicionar_despesas_recorrentes(request, dict_despesa, todas_despesas, ano):
             if mes_atual == 10:
                 proximo_ano = ano + 1
                 todas_despesas = recuperar_todas_despesas_usuario(request, proximo_ano)
-                for _mes in range(1, 5):
+                for _mes in range(1, 13):
                     nova_despesa = definir_despesa_apartir_despesa_recorrente(request, 
                                                                                 todas_despesas, 
                                                                                 recorrente,
