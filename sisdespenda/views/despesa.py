@@ -384,7 +384,7 @@ def definir_valores_despesa_template(request, ano=datetime.date.today().year):
     if int(ano) == ano_atual:
         # Junta as duas listas para verificacao de despesas recorrentes
         todas_despesas = list(chain(despesas, despesas_futura))
-        dict_despesa = adicionar_despesas_recorrentes(request, dict_despesa, todas_despesas, ano)
+        dict_despesa = adicionar_despesas_recorrentes(request, dict_despesa, todas_despesas, int(ano))
     
     total_despesa_mes = recuperar_total_despesa_usuario_mes(request, ano)
     if total_despesa_mes['vl_despesa__sum'] == None:
