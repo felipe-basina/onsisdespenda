@@ -341,7 +341,7 @@ def adicionar_despesas_recorrentes(request, dict_despesa, todas_despesas, ano):
                                                                             ano_atual)
 
             # Adiciona despesas futuras para o proximo ano a partir do mes especifico
-            if mes_atual == 10:
+            if mes_atual >= 10:
                 proximo_ano = ano + 1
                 todas_despesas = recuperar_todas_despesas_usuario(request, proximo_ano)
                 for _mes in range(1, 13):
