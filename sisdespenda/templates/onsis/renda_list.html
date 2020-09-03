@@ -114,10 +114,10 @@
             </div>
 			
             {% if template.rendas %}        
-				<div class="panel-body">
+				<div class="panel-body resumo-flex">
 					<div class="col-md-2 alinhamento-texto-quebra">
 						<label for="total_renda_mes_label" class="cont-renda-label">
-							Total de renda m&ecirc;s
+							M&ecirc;s
 						</label>
 						<label for="total_renda_mes" class="cont-renda">
 							{{ template.total_mes.vl_renda__sum|intcomma }}
@@ -125,7 +125,7 @@
 					</div>
 					<div class="col-md-2 alinhamento-texto-quebra">
 						<label for="total_renda_ano_label" class="cont-renda-label">
-							Total de renda ano
+							Ano
 						</label>
 						<label for="total_renda_ano" class="cont-renda">
 							{{ template.total_ano.vl_renda__sum|intcomma }}

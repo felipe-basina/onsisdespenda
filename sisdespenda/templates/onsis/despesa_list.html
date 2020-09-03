@@ -106,10 +106,10 @@
                </div>
             </div>
             {% if template.despesas or template.total_futura_ano %}
-            <div class="panel-body">
+            <div class="panel-body resumo-flex">
                <div class="col-md-2 alinhamento-texto-quebra">
                   <label for="total_despesa_mes_label" class="cont-despesa-label">
-                  Total de despesa m&ecirc;s
+                  M&ecirc;s
                   </label>
                   <label for="total_despesa_mes" class="cont-despesa">
                   {{ template.total_mes.vl_despesa__sum|intcomma }}
@@ -117,7 +117,7 @@
                </div>
                <div class="col-md-2 alinhamento-texto-quebra">
                   <label for="total_despesa_futura_label" class="cont-despesa-label">
-                  Total de despesa futura
+                  Futura
                   </label>
                   <label for="total_despesa_futura" class="cont-despesa">
                   {{ template.total_futura_ano.vl_despesa__sum|intcomma }}
@@ -125,7 +125,7 @@
                </div>
                <div class="col-md-2 alinhamento-texto-quebra">
                   <label for="total_despesa_ano_label" class="cont-despesa-label">
-                  Total de despesa ano
+                  Ano
                   </label>
                   <label for="total_despesa_ano" class="cont-despesa">
                   {{ template.total_ano.vl_despesa__sum|intcomma }}
