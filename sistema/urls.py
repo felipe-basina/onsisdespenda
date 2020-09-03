@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.contrib import admin
-from sisdespenda.views import inicial, login_logout, tipo_renda, renda, despesa, tipo_despesa, despesa_relatorio, renda_relatorio, relacao_relatorio, evento, saldo, despesa_grafico, recorrencia_despesa
+from sisdespenda.views import tipo_renda, renda, despesa, tipo_despesa, despesa_relatorio, renda_relatorio, relacao_relatorio, evento, saldo, despesa_grafico, recorrencia_despesa
+from sisdespenda.views.entrypoint import inicial, login_logout
 
 urlpatterns = [
     url(r'^onsisdespenda/acc/admin/', admin.site.urls),

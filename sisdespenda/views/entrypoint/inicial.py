@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.utils import timezone
 from django.utils.timezone import utc
 import datetime
-from . import evento
+from sisdespenda.views import evento
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -20,4 +20,4 @@ def inicio(request):
     evento.evento_new(request, 'LOGIN USUÁRIO')
     '''
     mensagem = 'Olá %s, seja bem-vindo(a)!' % (request.user)
-    return render(request, 'onsis/inicio.html', {'mensagem': mensagem, 'status': 'info'})
+    return render(request, 'onsis/entrypoint/inicio.html', {'mensagem': mensagem, 'status': 'info'})
