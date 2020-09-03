@@ -3,15 +3,15 @@ from django.http import *
 from django.shortcuts import render
 from django.utils.timezone import utc
 from django.contrib.auth.decorators import login_required
-from ..models import RecorrenciaDespesaTbl, TipoDespesaTbl
-from ..models import RecorrenciaDespesaForm
+from sisdespenda.models import RecorrenciaDespesaTbl, TipoDespesaTbl
+from sisdespenda.models import RecorrenciaDespesaForm
 import datetime
 from datetime import datetime as dt
 
 @login_required(login_url='/accounts/login/')
 def recorrencia_despesa_list(request):
 	dict_recorrencia_despesa = definir_valores_recorrencia_template(request)
-	return render(request, 'onsis/recorrencia_despesa_list.html', { 'template': dict_recorrencia_despesa, 'cd_reg': 0 })
+	return render(request, 'onsis/recorrencia/recorrencia_despesa_list.html', {'template': dict_recorrencia_despesa, 'cd_reg': 0})
 
 @login_required(login_url='/accounts/login/')
 def recorrencia_despesa_new(request, pk=0):
@@ -31,7 +31,7 @@ def recorrencia_despesa_new(request, pk=0):
 				dict_recorrencia['mensagem'] = 'Os valores para dia/mês não formam uma data válida'
 				dict_recorrencia['status'] = 'danger'
 				dict_recorrencia['form'] = form
-				return render(request, 'onsis/recorrencia_despesa_list.html', {'template': dict_recorrencia, 'cd_reg': 0})
+				return render(request, 'onsis/recorrencia/recorrencia_despesa_list.html', {'template': dict_recorrencia, 'cd_reg': 0})
 
 			recorrencia.cd_usuario = request.user.id
 			recorrencia.dt_criacao = datetime.datetime.utcnow().replace(tzinfo=utc)
@@ -53,7 +53,7 @@ def recorrencia_despesa_new(request, pk=0):
 		except RecorrenciaDespesaTbl.DoesNotExist:
 			dict_recorrencia['mensagem'] = 'Registro não encontrado!'
 			dict_recorrencia['status'] = 'danger'
-			return render(request, 'onsis/recorrencia_despesa_list.html', {'template': dict_recorrencia, 'cd_reg': 0})
+			return render(request, 'onsis/recorrencia/recorrencia_despesa_list.html', {'template': dict_recorrencia, 'cd_reg': 0})
 
 		form = RecorrenciaDespesaForm(initial={'cd_registro': recorrencia_despesa.cd_registro, 
 												'dia_recorrencia': recorrencia_despesa.dia_recorrencia, 
@@ -67,7 +67,7 @@ def recorrencia_despesa_new(request, pk=0):
 		dict_recorrencia['form'] = form
 		form.fields['cd_tipo_despesa'].queryset = recuperar_todos_tipo_despesa_usuario(request)
 
-	return render(request, 'onsis/recorrencia_despesa_list.html', { 'template': dict_recorrencia, 'cd_reg': pk })
+	return render(request, 'onsis/recorrencia/recorrencia_despesa_list.html', {'template': dict_recorrencia, 'cd_reg': pk})
 
 @login_required(login_url='/accounts/login/')
 def recorrencia_despesa_remove(request, pk):
@@ -84,7 +84,7 @@ def recorrencia_despesa_remove(request, pk):
 		dict_recorrencia['mensagem'] = 'Recorrência não encontrada!'
 		dict_recorrencia['status'] = 'danger'
         
-	return render(request, 'onsis/recorrencia_despesa_list.html', { 'template': dict_recorrencia })
+	return render(request, 'onsis/recorrencia/recorrencia_despesa_list.html', {'template': dict_recorrencia})
 
 ######################################
 #          Funcoes diversas          #

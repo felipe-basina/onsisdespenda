@@ -5,10 +5,9 @@ from django.utils.timezone import utc
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.db import connection
-from collections import namedtuple
 from ..models import DespesaTbl, TipoDespesaTbl
 from ..models import DespesaForm
-from sisdespenda.views.recorrencia_despesa import recuperar_recorrencias_usuario
+from sisdespenda.views.recorrencia.recorrencia_despesa import recuperar_recorrencias_usuario
 from itertools import chain
 import datetime
 import itertools
