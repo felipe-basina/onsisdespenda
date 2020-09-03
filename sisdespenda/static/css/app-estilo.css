@@ -276,7 +276,7 @@ input:focus {
 	*zoom: 1;
 }
 
-/*************************** Contabilização ***/
+/*************************** Contabilizaï¿½ï¿½o ***/
 .cont-despesa {
     font-size: 20px;
     color: #d9534f;
@@ -300,9 +300,14 @@ input:focus {
 .cont-renda-label {
 	color: #5cb85c;
 }
-/*************************** Contabilização ***/
+/*************************** Contabilizaï¿½ï¿½o ***/
 
 .borda_redonda_login {
 	margin-left: 35px;
 	border-radius: 20px;
+}
+
+/*************************** SeÃ§Ã£o resumo ***/
+.resumo-flex {
+	display: flex;
 }
