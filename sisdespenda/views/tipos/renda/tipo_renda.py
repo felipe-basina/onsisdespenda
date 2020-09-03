@@ -4,8 +4,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.timezone import utc
 import datetime
-from ..models import TipoRendaTbl
-from ..models import TipoRendaForm
+from sisdespenda.models import TipoRendaTbl
+from sisdespenda.models import TipoRendaForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 
@@ -13,14 +13,9 @@ from django.contrib.auth import login
 def tipo_renda_list(request):
 	tipos = recuperar_todos_tipo_renda_usuario(request)
 	form = TipoRendaForm()
-	return render(request, 'onsis/tipo_renda_list.html', {'tipos':tipos, 'form': form, 'cd_reg': 0})
+	return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'tipos':tipos, 'form': form, 'cd_reg': 0})
 
 @login_required(login_url='/accounts/login/')
-def tipo_detail(request, pk):
-	tipo = get_object_or_404(TipoRendaTbl, pk=pk)
-	return render(request, 'onsis/tipo_detail.html', {'tipo': tipo})
-
-@login_required(login_url='/accounts/login/')	
 def tipo_renda_new(request):
 
     if request.method == "POST":
@@ -36,7 +31,7 @@ def tipo_renda_new(request):
                 
                 mensagem_erro = 'Nao foi possivel definir novo tipo renda: valor [ ' + tipo.ds_tipo_renda + ' ] ja cadastrado!'
 
-                return render(request, 'onsis/tipo_renda_list.html', {'form': TipoRendaForm(), 
+                return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'form': TipoRendaForm(),
                                                                         'tipos': tipos, 
                                                                         'cd_reg': 0,
                                                                         'mensagem': mensagem_erro, 
@@ -50,14 +45,14 @@ def tipo_renda_new(request):
             form = TipoRendaForm()
             
             tipos = recuperar_todos_tipo_renda_usuario(request)
-            return render(request, 'onsis/tipo_renda_list.html', {'form': form, 
+            return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'form': form,
                                                                     'tipos': tipos, 
                                                                     'cd_reg': 0,
                                                                     'mensagem': 'Tipo renda salvo com sucesso!', 
                                                                     'status': 'success'})
     else:
         form = TipoRendaForm()
-    return render(request, 'onsis/tipo_renda_list.html', {'form': form})
+    return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'form': form})
     
 @login_required(login_url='/accounts/login/')	
 def tipo_renda_update(request, pk):
@@ -66,7 +61,7 @@ def tipo_renda_update(request, pk):
     tipos = recuperar_todos_tipo_renda_usuario(request)
     
     if not pk:
-        return render(request, 'onsis/tipo_renda_list.html', {'form': form,
+        return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'form': form,
                                                               'tipos': tipos,  
                                                               'cd_reg': 0,
                                                               'mensagem': 'Registro invalido!', 
@@ -78,7 +73,7 @@ def tipo_renda_update(request, pk):
     except TipoRendaTbl.DoesNotExist:
         form = TipoRendaForm()    
 
-        return render(request, 'onsis/tipo_renda_list.html', {'form': form,
+        return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'form': form,
                                                               'tipos': tipos,  
                                                               'cd_reg': 0,
                                                               'mensagem': 'Registro nao encontrado!', 
@@ -102,7 +97,7 @@ def tipo_renda_update(request, pk):
                 
                 mensagem_erro = 'Nao foi possivel atualizar tipo renda: valor [ ' + tipo.ds_tipo_renda + ' ] ja cadastrado!'
 
-                return render(request, 'onsis/tipo_renda_list.html', {'form': form, 
+                return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'form': form,
                                                                         'tipos': tipos, 
                                                                         'cd_reg': pk,
                                                                         'mensagem': mensagem_erro, 
@@ -130,7 +125,7 @@ def tipo_renda_update(request, pk):
             form = TipoRendaForm()
             
             tipos = recuperar_todos_tipo_renda_usuario(request)
-            return render(request, 'onsis/tipo_renda_list.html', {'form': form, 
+            return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'form': form,
                                                                     'tipos': tipos, 
                                                                     'cd_reg': 0,
                                                                     'mensagem': 'Tipo renda atualizado com sucesso!', 
@@ -139,7 +134,7 @@ def tipo_renda_update(request, pk):
         form = TipoRendaForm()
         tipos = recuperar_todos_tipo_renda_usuario(request)
 
-    return render(request, 'onsis/tipo_renda_list.html', {'form': form,
+    return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'form': form,
                                                           'tipos': tipos,  
                                                           'cd_reg': 0,
                                                           'mensagem': 'Nao foi possivel atualizar tipo de renda!', 
@@ -156,19 +151,19 @@ def tipo_renda_edit(request, pk):
     except TipoRendaTbl.DoesNotExist:
         form = TipoRendaForm()
         
-        return render(request, 'onsis/tipo_renda_list.html', {'form': form,'mensagem': 'Tipo renda não encontrado!', 'status': 'danger', 'tipos': tipos})
+        return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'form': form, 'mensagem': 'Tipo renda não encontrado!', 'status': 'danger', 'tipos': tipos})
     
     if not tipo:
     
-        return render(request, 'onsis/tipo_renda_list.html', {'mensagem': 'Tipo renda não encontrado!', 'status': 'danger', 'tipos': tipos})
+        return render(request, 'onsis/tipos/renda/tipo_renda_list.html', {'mensagem': 'Tipo renda não encontrado!', 'status': 'danger', 'tipos': tipos})
         
     else:
         
         form = TipoRendaForm(initial={'cd_registro': tipo.cd_registro, 'ds_tipo_renda': tipo.ds_tipo_renda})
         print ('form %s' % form)
         
-        return render(request, 'onsis/tipo_renda_list.html', 
-                              {'form': form, 'mensagem': 'Tipo renda selecionado para edição!', 
+        return render(request, 'onsis/tipos/renda/tipo_renda_list.html',
+                      {'form': form, 'mensagem': 'Tipo renda selecionado para edição!',
                                'status': 'info', 
                                'tipos': tipos,
                                'cd_reg': pk})

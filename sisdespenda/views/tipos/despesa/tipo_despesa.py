@@ -4,8 +4,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.timezone import utc
 import datetime
-from ..models import TipoDespesaTbl
-from ..models import TipoDespesaForm
+from sisdespenda.models import TipoDespesaTbl
+from sisdespenda.models import TipoDespesaForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 
@@ -13,7 +13,7 @@ from django.contrib.auth import login
 def tipo_despesa_list(request):
 	tipos = recuperar_todos_tipo_despesa_usuario(request)
 	form = TipoDespesaForm()
-	return render(request, 'onsis/tipo_despesa_list.html', {'tipos':tipos, 'form': form, 'cd_reg': 0})
+	return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'tipos':tipos, 'form': form, 'cd_reg': 0})
 
 @login_required(login_url='/accounts/login/')
 def tipo_detail(request, pk):
@@ -36,7 +36,7 @@ def tipo_despesa_new(request):
                 
                 mensagem_erro = 'Nao foi possivel definir novo tipo despesa: valor [ ' + tipo.ds_tipo_despesa + ' ] ja cadastrado!'
 
-                return render(request, 'onsis/tipo_despesa_list.html', {'form': TipoDespesaForm(), 
+                return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'form': TipoDespesaForm(),
                                                                         'tipos': tipos, 
                                                                         'cd_reg': 0,
                                                                         'mensagem': mensagem_erro, 
@@ -50,14 +50,14 @@ def tipo_despesa_new(request):
             form = TipoDespesaForm()
             
             tipos = recuperar_todos_tipo_despesa_usuario(request)
-            return render(request, 'onsis/tipo_despesa_list.html', {'form': form, 
+            return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'form': form,
                                                                     'tipos': tipos, 
                                                                     'cd_reg': 0,
                                                                     'mensagem': 'Tipo despesa salvo com sucesso!', 
                                                                     'status': 'success'})
     else:
         form = TipoDespesaForm()
-    return render(request, 'onsis/tipo_despesa_list.html', {'form': form})
+    return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'form': form})
     
 @login_required(login_url='/accounts/login/')	
 def tipo_despesa_update(request, pk):
@@ -66,7 +66,7 @@ def tipo_despesa_update(request, pk):
     tipos = recuperar_todos_tipo_despesa_usuario(request)
     
     if not pk:
-        return render(request, 'onsis/tipo_despesa_list.html', {'form': form,
+        return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'form': form,
                                                               'tipos': tipos,  
                                                               'cd_reg': 0,
                                                               'mensagem': 'Registro invalido!', 
@@ -78,7 +78,7 @@ def tipo_despesa_update(request, pk):
     except TipoDespesaTbl.DoesNotExist:
         form = TipoDespesaForm()    
 
-        return render(request, 'onsis/tipo_despesa_list.html', {'form': form,
+        return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'form': form,
                                                               'tipos': tipos,  
                                                               'cd_reg': 0,
                                                               'mensagem': 'Registro nao encontrado!', 
@@ -102,7 +102,7 @@ def tipo_despesa_update(request, pk):
                 
                 mensagem_erro = 'Nao foi possivel atualizar tipo despesa: valor [ ' + tipo.ds_tipo_despesa + ' ] ja cadastrado!'
 
-                return render(request, 'onsis/tipo_despesa_list.html', {'form': form, 
+                return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'form': form,
                                                                         'tipos': tipos, 
                                                                         'cd_reg': pk,
                                                                         'mensagem': mensagem_erro, 
@@ -130,7 +130,7 @@ def tipo_despesa_update(request, pk):
             form = TipoDespesaForm()
             
             tipos = recuperar_todos_tipo_despesa_usuario(request)
-            return render(request, 'onsis/tipo_despesa_list.html', {'form': form, 
+            return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'form': form,
                                                                     'tipos': tipos, 
                                                                     'cd_reg': 0,
                                                                     'mensagem': 'Tipo despesa atualizado com sucesso!', 
@@ -139,7 +139,7 @@ def tipo_despesa_update(request, pk):
         form = TipoDespesaForm()
         tipos = recuperar_todos_tipo_despesa_usuario(request)
 
-    return render(request, 'onsis/tipo_despesa_list.html', {'form': form,
+    return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'form': form,
                                                           'tipos': tipos,  
                                                           'cd_reg': 0,
                                                           'mensagem': 'Nao foi possivel atualizar tipo de despesa!', 
@@ -156,19 +156,19 @@ def tipo_despesa_edit(request, pk):
     except TipoDespesaTbl.DoesNotExist:
         form = TipoDespesaForm()
         
-        return render(request, 'onsis/tipo_despesa_list.html', {'form': form,'mensagem': 'Tipo despesa não encontrado!', 'status': 'danger', 'tipos': tipos})
+        return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'form': form, 'mensagem': 'Tipo despesa não encontrado!', 'status': 'danger', 'tipos': tipos})
     
     if not tipo:
     
-        return render(request, 'onsis/tipo_despesa_list.html', {'mensagem': 'Tipo despesa não encontrado!', 'status': 'danger', 'tipos': tipos})
+        return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html', {'mensagem': 'Tipo despesa não encontrado!', 'status': 'danger', 'tipos': tipos})
         
     else:
         
         form = TipoDespesaForm(initial={'cd_registro': tipo.cd_registro, 'ds_tipo_despesa': tipo.ds_tipo_despesa})
         print ('form %s' % form)
         
-        return render(request, 'onsis/tipo_despesa_list.html', 
-                              {'form': form, 'mensagem': 'Tipo despesa selecionado para edição!', 
+        return render(request, 'onsis/tipos/despesa/tipo_despesa_list.html',
+                      {'form': form, 'mensagem': 'Tipo despesa selecionado para edição!',
                                'status': 'info', 
                                'tipos': tipos,
                                'cd_reg': pk})
