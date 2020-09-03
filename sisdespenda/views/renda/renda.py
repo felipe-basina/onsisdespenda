@@ -6,15 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.db import connection
 from collections import namedtuple
-from ..models import RendaTbl, TipoRendaTbl
-from ..models import RendaForm
+from sisdespenda.models import RendaTbl, TipoRendaTbl
+from sisdespenda.models import RendaForm
 import datetime
 import itertools
 
 @login_required(login_url='/accounts/login/')
 def renda_list(request):
     dict_renda = definir_valores_renda_template(request)
-    return render(request, 'onsis/renda_list.html', { 'template': dict_renda })
+    return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda})
 
 @login_required(login_url='/accounts/login/')
 def renda_new(request):
@@ -35,7 +35,7 @@ def renda_new(request):
             dict_renda['mensagem'] = 'Não foi possível salvar a renda!'
             dict_renda['status'] = 'danger'
             
-    return render(request, 'onsis/renda_list.html', { 'template': dict_renda })
+    return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda})
     
 @login_required(login_url='/accounts/login/')	
 def renda_update(request, pk):
@@ -47,7 +47,7 @@ def renda_update(request, pk):
         dict_renda['mensagem'] = 'Registro invalido!'
         dict_renda['status'] = 'danger'
     
-        return render(request, 'onsis/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
+        return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
     try:
         
         renda_cadastrada = RendaTbl.objects.get(cd_registro=pk, cd_usuario=request.user.id)
@@ -56,7 +56,7 @@ def renda_update(request, pk):
         dict_renda['mensagem'] = 'Registro não encontrado!'
         dict_renda['status'] = 'danger'
         
-        return render(request, 'onsis/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
+        return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
     
     if request.method == "POST":
         form = RendaForm(request.POST)
@@ -89,7 +89,7 @@ def renda_update(request, pk):
                 dict_renda['mensagem'] = 'Tipo renda não encontrado!'
                 dict_renda['status'] = 'danger'
         
-                return render(request, 'onsis/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
+                return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
             
             print ('form = %s' % renda)
             nova_renda = RendaTbl(cd_registro=pk,
@@ -107,7 +107,7 @@ def renda_update(request, pk):
             dict_renda['mensagem'] = 'Renda atualizada com sucesso!'
             dict_renda['status'] = 'success'
 
-            return render(request, 'onsis/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
+            return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
     else:
         form = RendaForm()
         dict_renda = definir_valores_renda_template(request)
@@ -115,7 +115,7 @@ def renda_update(request, pk):
     dict_renda['mensagem'] = 'Não foi possivel atualizar renda!'
     dict_renda['status'] = 'danger'
 
-    return render(request, 'onsis/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
+    return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda, 'cd_reg': 0})
 
 @login_required(login_url='/accounts/login/')
 def renda_edit(request, pk):
@@ -131,11 +131,11 @@ def renda_edit(request, pk):
         
     except RendaTbl.DoesNotExist:
         
-        return render(request, 'onsis/renda_list.html', {'template': dict_renda})
+        return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda})
     
     if not renda:
     
-        return render(request, 'onsis/renda_list.html', {'template': dict_renda})
+        return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda})
         
     else:
         
@@ -168,14 +168,14 @@ def renda_edit(request, pk):
         dict_renda['form'] = form
         dict_renda['form'].fields['cd_tipo_renda'].queryset = recuperar_todos_tipo_renda_usuario(request)
         
-        return render(request, 'onsis/renda_list.html', {'template': dict_renda, 'cd_reg': pk})
+        return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda, 'cd_reg': pk})
 
 @login_required(login_url='/accounts/login/')
 def renda_list_param(request, ano):
     dict_renda = definir_valores_renda_template(request, ano=ano)
     dict_renda['mensagem'] = ('Exibindo rendas para o ano de %s' % ano)
     dict_renda['status'] = 'warning'
-    return render(request, 'onsis/renda_list.html', { 'template': dict_renda })
+    return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda})
     
 @login_required(login_url='/accounts/login/')
 def renda_remove(request, pk):
@@ -191,7 +191,7 @@ def renda_remove(request, pk):
         dict_renda['mensagem'] = 'Renda removida com sucesso!'
         dict_renda['status'] = 'success'
         
-    return render(request, 'onsis/renda_list.html', { 'template': dict_renda })
+    return render(request, 'onsis/renda/renda_list.html', {'template': dict_renda})
 
 ######################################
 #          Funcoes diversas          #
