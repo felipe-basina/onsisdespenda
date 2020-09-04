@@ -1,6 +1,9 @@
 from django.conf.urls import url
 from django.contrib import admin
-from sisdespenda.views import renda, despesa, evento, saldo
+from sisdespenda.views.saldo import saldo
+from sisdespenda.views.evento import evento
+from sisdespenda.views.despesa import despesa
+from sisdespenda.views.renda import renda
 from sisdespenda.views.relatorio import relacao_relatorio
 from sisdespenda.views.renda.relatorio import renda_relatorio
 from sisdespenda.views.despesa.relatorio import despesa_relatorio
