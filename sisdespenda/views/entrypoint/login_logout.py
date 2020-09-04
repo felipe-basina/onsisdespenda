@@ -40,7 +40,7 @@ def login_user(request):
 @login_required(login_url='/accounts/login/')    
 def set_user_password_form(request):
     form = AlteraSenhaForm()
-    return render(request, 'onsis/altera_senha.html', {'form': form})
+    return render(request, 'onsis/entrypoint/altera_senha.html', {'form': form})
     
 @login_required(login_url='/accounts/login/')    
 def change_user_password(request):
@@ -48,7 +48,7 @@ def change_user_password(request):
     nova_senha = request.POST['nova_senha']
     
     if senha != nova_senha:
-        return render(request, 'onsis/altera_senha.html',
+        return render(request, 'onsis/entrypoint/altera_senha.html',
                       {'mensagem': 'Atencao! As senhas nao conferem!', 'status': 'warning'})
     
     mensagem = 'Senha alterada com sucesso!'
@@ -64,4 +64,4 @@ def change_user_password(request):
         mensagem = "Nao foi possivel alterar a sua senha. Por favor, tente novamente mais tarde ou entre em contato com o adminstrador"
         status = 'danger'
     
-    return render(request, 'onsis/altera_senha.html', {'mensagem': mensagem, 'status': status})
+    return render(request, 'onsis/entrypoint/altera_senha.html', {'mensagem': mensagem, 'status': status})
