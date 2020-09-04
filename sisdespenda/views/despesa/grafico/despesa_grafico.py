@@ -84,7 +84,7 @@ def despesa_grafico_mes_ano(request, mes=datetime.date.today().month, indice=-1)
         'status': status
     }
 
-    return render(request, 'onsis/despesa_mes_grafico.html', data)
+    return render(request, 'onsis/despesa/grafico/despesa_mes_grafico.html', data)
 
 @login_required(login_url='/accounts/login/')
 def despesa_grafico_ano(request, ano=datetime.date.today().year):    
@@ -115,7 +115,7 @@ def despesa_grafico_ano(request, ano=datetime.date.today().year):
         'status': status
     }
     
-    return render(request, 'onsis/despesa_ano_grafico.html', data)
+    return render(request, 'onsis/despesa/grafico/despesa_ano_grafico.html', data)
     
 ######################################
 #          Funcoes diversas          #

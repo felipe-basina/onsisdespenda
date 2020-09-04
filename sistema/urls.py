@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from django.contrib import admin
-from sisdespenda.views import renda, despesa, despesa_relatorio, renda_relatorio, relacao_relatorio, evento, saldo, despesa_grafico
+from sisdespenda.views import renda, despesa, renda_relatorio, relacao_relatorio, evento, saldo
+from sisdespenda.views.despesa.relatorio import despesa_relatorio
+from sisdespenda.views.despesa.grafico import despesa_grafico
 from sisdespenda.views.recorrencia import recorrencia_despesa
 from sisdespenda.views.tipos.despesa import tipo_despesa
 from sisdespenda.views.tipos.renda import tipo_renda

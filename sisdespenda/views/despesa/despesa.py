@@ -5,8 +5,8 @@ from django.utils.timezone import utc
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.db import connection
-from ..models import DespesaTbl, TipoDespesaTbl
-from ..models import DespesaForm
+from sisdespenda.models import DespesaTbl, TipoDespesaTbl
+from sisdespenda.models import DespesaForm
 from sisdespenda.views.recorrencia.recorrencia_despesa import recuperar_recorrencias_usuario
 from itertools import chain
 import datetime
@@ -15,7 +15,7 @@ import itertools
 @login_required(login_url='/accounts/login/')
 def despesa_list(request):
     dict_despesa = definir_valores_despesa_template(request)
-    return render(request, 'onsis/despesa_list.html', { 'template': dict_despesa })
+    return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa})
     
 @login_required(login_url='/accounts/login/')
 def despesa_new(request):
@@ -38,7 +38,7 @@ def despesa_new(request):
             
     dict_despesa['futura'] = despesa.dt_despesa.date() > datetime.date.today()
     
-    return render(request, 'onsis/despesa_list.html', { 'template': dict_despesa })
+    return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa})
     
 @login_required(login_url='/accounts/login/')	
 def despesa_update(request, pk):
@@ -48,7 +48,7 @@ def despesa_update(request, pk):
         dict_despesa['mensagem'] = 'Registro invalido!'
         dict_despesa['status'] = 'danger'
     
-        return render(request, 'onsis/despesa_list.html', {'template': dict_despesa, 'cd_reg': 0})
+        return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa, 'cd_reg': 0})
     try:
         
         despesa_cadastrada = DespesaTbl.objects.get(cd_registro=pk, cd_usuario=request.user.id)
@@ -57,7 +57,7 @@ def despesa_update(request, pk):
         dict_despesa['mensagem'] = 'Registro não encontrado!'
         dict_despesa['status'] = 'danger'
         
-        return render(request, 'onsis/despesa_list.html', {'template': dict_despesa, 'cd_reg': 0})
+        return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa, 'cd_reg': 0})
     
     if request.method == "POST":
         form = DespesaForm(request.POST)
@@ -102,7 +102,7 @@ def despesa_update(request, pk):
                 dict_despesa['mensagem'] = 'Tipo despesa não encontrado!'
                 dict_despesa['status'] = 'danger'
         
-                return render(request, 'onsis/despesa_list.html', {'template': tupla_renda, 'cd_reg': 0})
+                return render(request, 'onsis/despesa/despesa_list.html', {'template': tupla_renda, 'cd_reg': 0})
                         
             cd_recorrencia_despesa = 0
             if despesa_cadastrada.cd_recorrencia_despesa and despesa_cadastrada.cd_recorrencia_despesa > 0:
@@ -126,7 +126,7 @@ def despesa_update(request, pk):
             dict_despesa['status'] = 'success'
             dict_despesa['futura'] = despesa.dt_despesa.date() > datetime.date.today()
 
-            return render(request, 'onsis/despesa_list.html', {'template': dict_despesa, 'cd_reg': 0})
+            return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa, 'cd_reg': 0})
     else:
         form = DespesaForm()
         dict_despesa = definir_valores_despesa_template(request)
@@ -134,7 +134,7 @@ def despesa_update(request, pk):
     dict_despesa['mensagem'] = 'Nao foi possivel atualizar despesa!'
     dict_despesa['status'] = 'danger'
 
-    return render(request, 'onsis/despesa_list.html', {'template': dict_despesa, 'cd_reg': 0})
+    return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa, 'cd_reg': 0})
 
 @login_required(login_url='/accounts/login/')
 def despesa_edit(request, pk):
@@ -149,11 +149,11 @@ def despesa_edit(request, pk):
         
     except DespesaTbl.DoesNotExist:
         
-        return render(request, 'onsis/despesa_list.html', {'template': dict_despesa})
+        return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa})
     
     if not despesa:
     
-        return render(request, 'onsis/despesa_list.html', {'template': dict_despesa})
+        return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa})
         
     else:
         
@@ -185,7 +185,7 @@ def despesa_edit(request, pk):
         dict_despesa['form'].fields['cd_tipo_despesa'].queryset = recuperar_todos_tipo_despesa_usuario(request)
         dict_despesa['futura'] = despesa.dt_despesa.date() > datetime.date.today()
         
-        return render(request, 'onsis/despesa_list.html', {'template': dict_despesa, 'cd_reg': pk})
+        return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa, 'cd_reg': pk})
     
     
 @login_required(login_url='/accounts/login/')
@@ -193,7 +193,7 @@ def despesa_list_param(request, ano):
     dict_despesa = definir_valores_despesa_template(request, ano=ano)
     dict_despesa['mensagem'] = ('Exibindo despesas para o ano de %s' % ano)
     dict_despesa['status'] = 'warning'
-    return render(request, 'onsis/despesa_list.html', { 'template': dict_despesa })
+    return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa})
     
 @login_required(login_url='/accounts/login/')
 def despesa_remove(request, pk):
@@ -209,7 +209,7 @@ def despesa_remove(request, pk):
         dict_despesa['mensagem'] = 'Despesa removida com sucesso!'
         dict_despesa['status'] = 'success'
         
-    return render(request, 'onsis/despesa_list.html', { 'template': dict_despesa })
+    return render(request, 'onsis/despesa/despesa_list.html', {'template': dict_despesa})
     
 ######################################
 #          Funcoes diversas          #
