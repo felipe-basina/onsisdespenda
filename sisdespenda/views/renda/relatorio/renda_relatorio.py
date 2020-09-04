@@ -9,19 +9,19 @@ import itertools
 @login_required(login_url='/accounts/login/')
 def rendas_realizadas_mes_ano(request):
     tupla_renda = definir_valores_template_mes_ano(request)
-    return render(request, 'onsis/renda_mes_relatorio.html', { 'template': tupla_renda })
+    return render(request, 'onsis/renda/relatorio/renda_mes_relatorio.html', {'template': tupla_renda})
 
 @login_required(login_url='/accounts/login/')    
 def rendas_realizadas_mes_ano_param(request, ano):
     tupla_renda = definir_valores_template_mes_ano(request, ano)
     tupla_renda['mensagem'] = 'Exibindo relatorio de rendas para o ano de %s' % ano
     tupla_renda['status'] = 'warning'
-    return render(request, 'onsis/renda_mes_relatorio.html', { 'template': tupla_renda })
+    return render(request, 'onsis/renda/relatorio/renda_mes_relatorio.html', {'template': tupla_renda})
     
 @login_required(login_url='/accounts/login/')
 def rendas_realizadas_ano(request):
     tupla_renda = definir_valores_template_ano(request)
-    return render(request, 'onsis/renda_ano_relatorio.html', { 'template': tupla_renda })
+    return render(request, 'onsis/renda/relatorio/renda_ano_relatorio.html', {'template': tupla_renda})
     
 ######################################
 #          Funcoes diversas          #
