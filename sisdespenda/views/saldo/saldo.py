@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import connection
 import datetime
 import itertools
-from ..models import DespesaTbl, RendaTbl
+from sisdespenda.models import DespesaTbl, RendaTbl
 from django.db.models import Sum
 from decimal import Decimal
 from operator import itemgetter
@@ -13,7 +13,7 @@ from operator import itemgetter
 @login_required(login_url='/accounts/login/')
 def saldo_list(request):
     tupla_saldo = definir_valores_saldo_template(request)
-    return render(request, 'onsis/saldo.html', { 'template': tupla_saldo })
+    return render(request, 'onsis/saldo/saldo.html', {'template': tupla_saldo})
     
 ######################################
 #          Funcoes diversas          #
