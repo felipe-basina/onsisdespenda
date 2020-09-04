@@ -5,21 +5,21 @@ from django.utils.timezone import utc
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 from collections import namedtuple
-from ..models import EventoTbl
+from sisdespenda.models import EventoTbl
 import datetime
 import itertools
 
 @login_required(login_url='/accounts/login/')
 def evento_list(request):
     tupla_evento = definir_valores_evento_template(request)
-    return render(request, 'onsis/evento_list.html', { 'template': tupla_evento })
+    return render(request, 'onsis/evento/evento_list.html', {'template': tupla_evento})
 
 @login_required(login_url='/accounts/login/')
 def evento_list_param(request, ano):
     tupla_evento = definir_valores_evento_template(request, ano=ano)
     tupla_evento['mensagem'] = ('Exibindo eventos para o ano de %s' % ano)
     tupla_evento['status'] = 'warning'
-    return render(request, 'onsis/evento_list.html', { 'template': tupla_evento })
+    return render(request, 'onsis/evento/evento_list.html', {'template': tupla_evento})
     
 def evento_new(request, nome_evento):
     EventoTbl.objects.create(cd_usuario=request.user.id, 
