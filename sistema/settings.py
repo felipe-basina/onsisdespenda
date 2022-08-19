@@ -23,6 +23,7 @@ SECRET_KEY = 'ngz_auutsz!1&#p$-at0!2!9#4&c7f!*d4kl+jf_u_%&mzsu(@'
 DEBUG = False
 
 ALLOWED_HOSTS = ['onsisdespenda.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://onsisdespenda.herokuapp.com']
 
 # Application definition
 
