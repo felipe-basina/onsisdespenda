@@ -10,3 +10,4 @@ settings-desenvolvimento.py
 settings-producao.py
 settings-padrao.py
 .idea/
+venv/
