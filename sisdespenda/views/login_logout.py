@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.http import *
-from django.shortcuts import render, get_object_or_404, render_to_response, redirect
-from django.template import RequestContext
-from django.utils import timezone
-from django.utils.timezone import utc
-import datetime
-from . import evento
+from django.shortcuts import render
 from ..models import AlteraSenhaForm
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth.decorators import login_required
