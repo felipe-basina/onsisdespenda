@@ -7,6 +7,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
+from pathlib import Path
+from urllib.parse import urlparse
+
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -17,13 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ngz_auutsz!1&#p$-at0!2!9#4&c7f!*d4kl+jf_u_%&mzsu(@'
+SECRET_KEY = os.getenv('SECRET_KEY', 'please-change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['onsisdespenda.herokuapp.com']
-CSRF_TRUSTED_ORIGINS = ['https://onsisdespenda.herokuapp.com']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 # Application definition
 
@@ -73,15 +75,19 @@ WSGI_APPLICATION = 'sistema.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+DATABASE_URL = os.getenv('DATABASE_URL', None)
+
+db_info = urlparse(DATABASE_URL)
 
 DATABASES = {
     'default': {
-        'ENGINE': '',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db',
+        'USER': db_info.username,
+        'PASSWORD': db_info.password,
+        'HOST': db_info.hostname,
+        'PORT': db_info.port,
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 
@@ -123,7 +129,5 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'sisdespenda/static')
-
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
+STATIC_ROOT = Path(BASE_DIR).joinpath('staticfiles')
+STATICFILES_DIRS = (Path(BASE_DIR).joinpath('sisdespenda/static'),)
