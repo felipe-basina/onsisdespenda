@@ -130,7 +130,7 @@ def recuperar_despesas_agrupadas_mes_ano_por_tipo(request, mes, ano=datetime.dat
                         'AND d.DT_DESPESA <= now() '
                         'AND EXTRACT(month FROM d.DT_DESPESA) = %s '
                         'AND EXTRACT(year FROM d.DT_DESPESA) = %s '
-                        'GROUP BY tp.CD_REGISTRO '
+                        'GROUP BY tp.CD_REGISTRO, tp.DS_TIPO_DESPESA '
                         'ORDER BY tp.DS_TIPO_DESPESA ', 
                         [request.user.id, mes, ano])
     lista = cursor.fetchall()
@@ -144,7 +144,7 @@ def recuperar_despesas_agrupadas_ano_por_tipo(request, ano=datetime.date.today()
                         'WHERE d.CD_USUARIO = %s ' 
                         'AND d.DT_DESPESA <= now() '
                         'AND EXTRACT(year FROM d.DT_DESPESA) = %s '
-                        'GROUP BY tp.CD_REGISTRO '
+                        'GROUP BY tp.CD_REGISTRO, tp.DS_TIPO_DESPESA '
                         'ORDER BY tp.DS_TIPO_DESPESA ', 
                         [request.user.id, ano])
     lista = cursor.fetchall()
@@ -159,7 +159,7 @@ def recuperar_despesas_futuras_agrupadas_mes_ano_por_tipo(request, mes, ano=date
                         'AND d.DT_DESPESA > now() '
                         'AND EXTRACT(month FROM DT_DESPESA) = %s '
                         'AND EXTRACT(year FROM d.DT_DESPESA) = %s '
-                        'GROUP BY tp.CD_REGISTRO '
+                        'GROUP BY tp.CD_REGISTRO, tp.DS_TIPO_DESPESA '
                         'ORDER BY tp.DS_TIPO_DESPESA ', 
                         [request.user.id, mes, ano])
     lista = cursor.fetchall()
