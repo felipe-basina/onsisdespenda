@@ -83,6 +83,8 @@ ul li{
 .custom_radio {
     width: 25px!important;
     height: 25px!important;
+	display: inline-table;
+	border: none;
 }
 
 /**************************** data tables ***/
@@ -311,3 +313,4 @@ input:focus {
 .resumo-flex {
 	display: flex;
 }
+
