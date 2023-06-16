@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib import admin
 from sisdespenda.views import inicial, login_logout, tipo_renda, renda, despesa, tipo_despesa, despesa_relatorio, \
-    renda_relatorio, relacao_relatorio, evento, saldo, despesa_grafico, recorrencia_despesa
+    renda_relatorio, relacao_relatorio, evento, saldo, despesa_grafico, recorrencia_despesa, fake_api, api
 
 urlpatterns = [
     path('onsisdespenda/acc/admin/', admin.site.urls),
@@ -58,4 +58,8 @@ urlpatterns = [
     path('saldo/lista', saldo.saldo_list, name='saldo_list'),
     path('nova/senha', login_logout.set_user_password_form, name='set_user_password_form'),
     path('altera/senha/', login_logout.change_user_password, name='change_user_password'),
+    path('apis/fake-data', fake_api.get_fake_data),
+    path('apis/send-fake-data', fake_api.post_fake_data),
+    path('apis/despesa/novo', api.despesa_add),
+    path('apis/renda/novo', api.renda_add),
 ]
