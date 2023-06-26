@@ -11,3 +11,5 @@ settings-producao.py
 settings-padrao.py
 .idea/
 venv/
+staticfiles/
+docker-compose.yml
